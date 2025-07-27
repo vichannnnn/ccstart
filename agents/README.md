@@ -29,3 +29,7 @@ Agents are specialized prompts or tools that help Claude perform specific tasks 
 - **planner** - Strategic planning specialist for breaking down complex problems and creating implementation roadmaps
 - **coder** - Expert software developer for implementing features, fixing bugs, and optimizing code
 - **checker** - Quality assurance and code review specialist for testing, security analysis, and validation
+- **researcher** - Research specialist for both online sources and local codebases, gathering comprehensive information from multiple sources
+- **blockchain** - Blockchain and Web3 expert for smart contracts, DeFi protocols, and blockchain architecture
+- **frontend** - Frontend development specialist for UI/UX, responsive design, and modern web frameworks
+- **shadcn** - shadcn/ui component library expert for building beautiful, accessible React interfaces
