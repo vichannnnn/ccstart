@@ -1,0 +1,15 @@
+# Development files
+.git
+.gitignore
+node_modules/
+
+# Don't include the actual project files, only template
+agents/
+docs/
+plans/
+tickets/
+CLAUDE.md
+README.md
+
+# Keep only what's needed for the package
+# bin/ and template/ are included via "files" in package.json
