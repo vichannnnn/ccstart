@@ -42,6 +42,7 @@ The boilerplate includes several specialized agents in the `agents/` directory:
 - **researcher.md** - Research and information gathering
 - **blockchain.md** - Web3 and smart contract development
 - **frontend.md** - UI/UX and frontend development
+- **backend.md** - API design and server-side development
 - **shadcn.md** - shadcn/ui component development
 
 ### Selecting Agents for Your Project

@@ -32,4 +32,5 @@ Agents are specialized prompts or tools that help Claude perform specific tasks 
 - **researcher** - Research specialist for both online sources and local codebases, gathering comprehensive information from multiple sources
 - **blockchain** - Blockchain and Web3 expert for smart contracts, DeFi protocols, and blockchain architecture
 - **frontend** - Frontend development specialist for UI/UX, responsive design, and modern web frameworks
+- **backend** - Backend development specialist for API design, database architecture, and server-side optimization
 - **shadcn** - shadcn/ui component library expert for building beautiful, accessible React interfaces
