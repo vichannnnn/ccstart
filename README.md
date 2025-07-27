@@ -100,6 +100,11 @@ This boilerplate is designed to work seamlessly with Claude Code. When starting 
 
 This is a template repository. Feel free to fork and customize it for your specific needs. If you have improvements to the boilerplate structure, please submit a pull request.
 
+## Contributors
+
+- [@vichannnnn](https://github.com/vichannnnn) - Original creator and maintainer
+- [@MrMarciaOng](https://github.com/MrMarciaOng) - Added specialized agents (researcher, blockchain, frontend, shadcn)
+
 ## License
 
 This boilerplate is provided as-is for use with Claude Code. Customize the license according to your project needs.
