@@ -99,7 +99,6 @@ After setting up your project with `ccsetup`:
 - Pre-configured project structure for Claude Code
 - Multiple specialized agents for different tasks
 - Built-in ticket and planning system
-- Git repository initialization
 - Ready-to-use boilerplate
 
 ## Credits

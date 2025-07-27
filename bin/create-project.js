@@ -2,7 +2,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 
 const projectName = process.argv[2] || '.';
 const targetDir = path.resolve(process.cwd(), projectName);
@@ -34,13 +33,6 @@ function copyRecursive(src, dest) {
 }
 
 copyRecursive(templateDir, targetDir);
-
-if (fs.existsSync(path.join(targetDir, '.git'))) {
-  console.log('Git repository already exists, skipping git init...');
-} else {
-  console.log('Initializing git repository...');
-  execSync('git init', { cwd: targetDir, stdio: 'inherit' });
-}
 
 console.log('\n✅ Claude Code project created successfully!');
 console.log('\nNext steps:');
