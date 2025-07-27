@@ -104,7 +104,7 @@ After setting up your project with `ccsetup`:
 
 ## Credits
 
-Inspired by and based on the work of [vichannnnn](https://github.com/vichannnnn) and our discussions in TechOverflow
+Born from our discussions in TechOverflow with [vichannnnn](https://github.com/vichannnnn) and [nasdin](https://github.com/nasdin)
 
 ## License
 
