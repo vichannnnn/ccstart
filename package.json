@@ -1,6 +1,6 @@
 {
   "name": "ccsetup",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Boilerplate for Claude Code projects with agents, tickets, and plans",
   "bin": {
     "ccsetup": "./bin/create-project.js"
