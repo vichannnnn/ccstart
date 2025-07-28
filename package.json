@@ -26,9 +26,21 @@
   "homepage": "https://github.com/MrMarciaOng/ccsetup#readme",
   "files": [
     "bin/",
-    "template/"
+    "template/",
+    "README.md"
   ],
   "engines": {
     "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "@inquirer/checkbox": "^4.0.4"
+  },
+  "devDependencies": {
+    "jest": "^30.0.5"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   }
 }

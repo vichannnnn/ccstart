@@ -9,7 +9,10 @@ docs/
 plans/
 tickets/
 CLAUDE.md
-README.md
+.claude/
+__test__/
+.vscode/
+.DS_Store
 
 # Keep only what's needed for the package
 # bin/ and template/ are included via "files" in package.json
