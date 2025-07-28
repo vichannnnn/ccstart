@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm downloads](https://img.shields.io/npm/dm/ccsetup.svg)](https://www.npmjs.com/package/ccsetup)
 
-Quick setup for Claude Code projects with built-in agents, ticket system, and planning tools.
+Quick setup for Claude Code projects with built-in agents, ticket system, planning tools and agent orchestration workflow.
 
 ## Installation
 
