@@ -26,6 +26,7 @@ Agents are specialized prompts or tools that help Claude perform specific tasks 
 ```
 
 ## Available Agents
+- **orchestrator** - Multi-agent workflow coordinator for complex tasks requiring multiple specialists
 - **planner** - Strategic planning specialist for breaking down complex problems and creating implementation roadmaps
 - **coder** - Expert software developer for implementing features, fixing bugs, and optimizing code
 - **checker** - Quality assurance and code review specialist for testing, security analysis, and validation

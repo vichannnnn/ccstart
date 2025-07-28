@@ -36,6 +36,7 @@ npx ccsetup .  # in current directory
 
 The boilerplate includes several specialized agents in the `agents/` directory:
 
+- **orchestrator.md** - Multi-agent workflow coordination
 - **planner.md** - Strategic planning and task breakdown
 - **coder.md** - Implementation and development
 - **checker.md** - Testing and quality assurance

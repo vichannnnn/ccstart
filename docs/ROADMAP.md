@@ -49,6 +49,15 @@ High-level overview of the project, what it does, the main features
   - Establish docs, plans, and tickets directories
   - Add README files to all directories
 
+### Agent Development
+- [x] Add specialized agents ✅
+  - Frontend, Backend, Blockchain, Shadcn agents
+  - Researcher agent for information gathering
+- [x] Implement agent orchestration workflow ✅
+  - Create orchestrator agent for multi-agent coordination
+  - Document orchestration patterns and examples
+  - Update workflow documentation
+
 ### [Add your project tasks here]
 - [ ] Task description
   - Subtask 1

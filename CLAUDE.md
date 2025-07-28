@@ -116,6 +116,34 @@ Closes #XXX (if applicable)
 ## Agents
 See @agents/README.md for available agents and their purposes
 
+### Agent Orchestration Workflow
+
+For complex tasks requiring multiple specialized agents, use the orchestrator agent to coordinate workflows:
+
+1. **Start with Orchestration**: For multi-faceted tasks, begin with:
+   ```
+   "Use the orchestrator agent to help me build a user authentication system"
+   ```
+
+2. **Orchestration Patterns**:
+   - **Sequential**: Tasks with dependencies (design → implement → test)
+   - **Parallel**: Independent tasks (frontend + backend development)
+   - **Iterative**: Refinement cycles (code → review → fix → verify)
+
+3. **Example Workflows**:
+   ```
+   # Full-stack feature
+   Orchestrator → Planner (architecture) → Backend (API) → Frontend (UI) → Checker (review)
+   
+   # Bug fix workflow
+   Orchestrator → Researcher (investigate) → Coder (fix) → Checker (verify)
+   ```
+
+4. **Best Practices**:
+   - Let the orchestrator manage agent coordination
+   - Use todos to track multi-agent progress
+   - Provide clear context between agent handoffs
+
 ## Tickets
 See @tickets/README.md for ticket format and management approach
 
