@@ -3,9 +3,16 @@
   "version": "1.0.6",
   "description": "Boilerplate for Claude Code projects with agents, tickets, and plans",
   "bin": {
-    "ccsetup": "./bin/create-project.js"
+    "ccsetup": "bin/create-project.js"
   },
-  "keywords": ["claude", "boilerplate", "project-template", "claude-code", "ai", "development"],
+  "keywords": [
+    "claude",
+    "boilerplate",
+    "project-template",
+    "claude-code",
+    "ai",
+    "development"
+  ],
   "author": "marcia_ong",
   "contributors": [
     "hima7459",
@@ -14,7 +21,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MrMarciaOng/ccsetup.git"
+    "url": "git+https://github.com/MrMarciaOng/ccsetup.git"
   },
   "homepage": "https://github.com/MrMarciaOng/ccsetup#readme",
   "files": [
