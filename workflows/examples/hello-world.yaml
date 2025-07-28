@@ -1,0 +1,30 @@
+version: "1.0"
+name: hello-world
+description: Simple sequential workflow to test the orchestration system
+
+tasks:
+  - id: analyze
+    agent: planner
+    description: Analyze the current project structure
+    parameters:
+      task: "Analyze the Claude Code project structure and identify key components"
+  
+  - id: summarize
+    agent: coder
+    description: Create a summary based on the analysis
+    dependencies: [analyze]
+    parameters:
+      task: "Create a concise summary of the project structure based on the planner's analysis"
+      context: "${analyze.output}"
+  
+  - id: review
+    agent: checker
+    description: Review the summary for accuracy
+    dependencies: [summarize]
+    parameters:
+      task: "Review the summary created by the coder for accuracy and completeness"
+      summary: "${summarize.output}"
+
+settings:
+  timeout: 1800
+  on_failure: stop

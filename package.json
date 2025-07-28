@@ -3,7 +3,8 @@
   "version": "1.0.5",
   "description": "Boilerplate for Claude Code projects with agents, tickets, and plans",
   "bin": {
-    "ccsetup": "./bin/create-project.js"
+    "ccsetup": "./bin/create-project.js",
+    "ccworkflow": "./bin/workflow-cli.js"
   },
   "keywords": ["claude", "boilerplate", "project-template", "claude-code", "ai", "development"],
   "author": "marcia_ong",
@@ -23,5 +24,10 @@
   ],
   "engines": {
     "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "commander": "^11.0.0",
+    "chalk": "^4.1.2"
   }
 }

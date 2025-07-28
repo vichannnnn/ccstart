@@ -1,0 +1,71 @@
+version: "1.0"
+name: full-stack-feature
+description: Example workflow for implementing a complete full-stack feature
+
+tasks:
+  - id: research
+    agent: researcher
+    description: Research best practices for the feature
+    parameters:
+      task: "Research best practices for implementing user authentication in modern web applications"
+  
+  - id: design
+    agent: planner
+    description: Design the feature architecture
+    dependencies: [research]
+    parameters:
+      task: "Design a secure user authentication system based on research findings"
+      research_findings: "${research.output}"
+  
+  - id: backend_api
+    agent: backend
+    description: Implement backend API endpoints
+    dependencies: [design]
+    parameters:
+      task: "Implement RESTful API endpoints for user authentication"
+      design_spec: "${design.output}"
+  
+  - id: frontend_ui
+    agent: frontend
+    description: Build frontend components
+    dependencies: [design]
+    parameters:
+      task: "Create React components for login and registration forms"
+      design_spec: "${design.output}"
+  
+  - id: styling
+    agent: shadcn
+    description: Apply shadcn/ui styling
+    dependencies: [frontend_ui]
+    parameters:
+      task: "Style the authentication forms using shadcn/ui components"
+      components: "${frontend_ui.output}"
+  
+  - id: integration
+    agent: coder
+    description: Integrate frontend with backend
+    dependencies: [backend_api, styling]
+    parameters:
+      task: "Connect the frontend authentication forms to the backend API"
+      api_spec: "${backend_api.output}"
+      ui_components: "${styling.output}"
+  
+  - id: security_review
+    agent: checker
+    description: Review implementation for security
+    dependencies: [integration]
+    parameters:
+      task: "Perform security review of the authentication implementation"
+      implementation: "${integration.output}"
+  
+  - id: final_test
+    agent: checker
+    description: Final testing and validation
+    dependencies: [security_review]
+    parameters:
+      task: "Run comprehensive tests on the authentication feature"
+      security_status: "${security_review.output}"
+
+settings:
+  timeout: 3600
+  on_failure: stop

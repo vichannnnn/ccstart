@@ -110,6 +110,16 @@ Closes #XXX (if applicable)
 # npm test
 ```
 
+## Custom Slash Commands
+
+This project includes custom slash commands in `.claude/commands/`:
+
+- `/review-tickets` - Review all project tickets and provide status report
+
+To use: Simply type the command in your message to Claude.
+
+See `.claude/commands/README.md` for more details and creating new commands.
+
 ## Important Context
 [Add any project-specific context, dependencies, or requirements here]
 

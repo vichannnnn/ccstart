@@ -42,4 +42,9 @@ if (projectName !== '.') {
 console.log('  1. Edit CLAUDE.md to add your project-specific instructions');
 console.log('  2. Update docs/ROADMAP.md with your project goals');
 console.log('  3. Start creating tickets in the tickets/ directory');
+console.log('  4. Create workflow files in .claude/workflows/ for multi-agent orchestration');
+console.log('\nWorkflow commands:');
+console.log('  ccworkflow validate <workflow.yaml>  - Validate a workflow file');
+console.log('  ccworkflow run <workflow.yaml>       - Execute a workflow');
+console.log('  ccworkflow list                      - List available workflows');
 console.log('\nHappy coding with Claude! 🎉');
