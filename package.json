@@ -13,17 +13,18 @@
     "ai",
     "development"
   ],
-  "author": "marcia_ong",
+  "author": "vichannnnn",
   "contributors": [
+    "marcia_ong",
     "hima7459",
     "nasdin"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MrMarciaOng/ccsetup.git"
+    "url": "git+https://github.com/vichannnnn/claude-code.git"
   },
-  "homepage": "https://github.com/MrMarciaOng/ccsetup#readme",
+  "homepage": "https://github.com/vichannnnn/claude-code#readme",
   "files": [
     "bin/",
     "template/",
