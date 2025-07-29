@@ -68,6 +68,14 @@ After adding the agents you want to in `./claude/agents` folder, setup the workf
 
 See @tickets/README.md for ticket format and management approach
 
+### Ticket Management
+- **Ticket List**: Maintain @tickets/ticket-list.md as a centralized index of all tickets
+- **Update ticket-list.md** whenever you:
+  - Create a new ticket (add to appropriate priority section)
+  - Change ticket status (update emoji and move if completed)
+  - Complete a ticket (move to completed section with date)
+- **Status Emojis**: 🔴 Todo | 🟡 In Progress | 🟢 Done | 🔵 Blocked | ⚫ Cancelled
+
 ## Plans
 
 See @plans/README.md for planning documents and architectural decisions
@@ -87,6 +95,7 @@ Before starting any task:
 3. **Create planning documents**: Before implementing any code or features, create a markdown file documenting the approach
 4. **Use plans directory**: When discussing ideas or next steps, create timestamped files in the plans directory (e.g., `plans/next-steps-YYYY-MM-DD-HH-MM-SS.md`) to maintain a record of decisions
 5. **No code comments**: Never add comments to any code you write - code should be self-documenting
+6. **Maintain ticket list**: Always update @tickets/ticket-list.md when creating, updating, or completing tickets to maintain a clear project overview
 
 ## Additional Notes
 
