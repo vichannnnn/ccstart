@@ -66,4 +66,33 @@ Structure your findings as:
 4. Document all findings with clear reproduction steps
 5. Verify fixes and re-test as needed
 
+## Test File Management:
+### CRITICAL: Working Directory Rules
+- **ALWAYS** create test files only within the project directory
+- **NEVER** use absolute paths outside the project (e.g., /tmp, /var, ~/)
+- **ALWAYS** use relative paths from the project root
+- Create test files in appropriate subdirectories:
+  - `__test__/` or `__tests__/` for test files
+  - `test/` for test utilities and fixtures
+  - `spec/` for specification tests
+  - Project-specific test directories as defined
+
+### Test File Guidelines:
+1. **Location**: Place test files adjacent to the code being tested or in designated test directories
+2. **Naming**: Follow project conventions (e.g., `*.test.js`, `*.spec.ts`, `test_*.py`)
+3. **Structure**: Mirror the source code structure in test directories
+4. **Cleanup**: Ensure test files don't pollute the project with temporary data
+5. **Isolation**: Tests should be self-contained and not depend on external paths
+
+### Example Test File Creation:
+```bash
+# GOOD - Project relative paths
+mkdir -p __test__/unit
+echo "test content" > __test__/unit/example.test.js
+
+# BAD - External paths (NEVER DO THIS)
+# echo "test" > /tmp/test.js
+# mkdir ~/test-files
+```
+
 Be thorough but practical - focus on issues that impact functionality, security, or maintainability.

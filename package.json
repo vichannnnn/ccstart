@@ -1,11 +1,18 @@
 {
   "name": "ccsetup",
-  "version": "1.0.5",
-  "description": "Boilerplate for Claude Code projects with agents, tickets, and plans",
+  "version": "1.0.9",
+  "description": "Boilerplate for Claude Code projects with agents, tickets, plans and agent orchestration workflow",
   "bin": {
-    "ccsetup": "./bin/create-project.js"
+    "ccsetup": "bin/create-project.js"
   },
-  "keywords": ["claude", "boilerplate", "project-template", "claude-code", "ai", "development"],
+  "keywords": [
+    "claude",
+    "boilerplate",
+    "project-template",
+    "claude-code",
+    "ai",
+    "development"
+  ],
   "author": "marcia_ong",
   "contributors": [
     "hima7459",
@@ -14,14 +21,26 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MrMarciaOng/ccsetup.git"
+    "url": "git+https://github.com/MrMarciaOng/ccsetup.git"
   },
   "homepage": "https://github.com/MrMarciaOng/ccsetup#readme",
   "files": [
     "bin/",
-    "template/"
+    "template/",
+    "README.md"
   ],
   "engines": {
     "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "@inquirer/checkbox": "^4.0.4"
+  },
+  "devDependencies": {
+    "jest": "^30.0.5"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   }
 }
