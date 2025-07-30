@@ -46,11 +46,12 @@ Examples:
 ## What's Included
 
 The boilerplate template creates:
-- **CLAUDE.md** - Project instructions for Claude
-- **agents/** - Specialized AI agents (planner, coder, checker, etc.)
-- **tickets/** - Task tracking system
-- **plans/** - Project planning documents
-- **docs/** - Documentation with ROADMAP.md and agent-orchestration.md
+- **CLAUDE.md** - Project instructions for Claude (references claude/ subdirectories)
+- **claude/** - All Claude-related files in one organized directory:
+  - **claude/agents/** - Specialized AI agents (planner, coder, checker, etc.)
+  - **claude/tickets/** - Task tracking system
+  - **claude/plans/** - Project planning documents
+  - **claude/docs/** - Documentation with ROADMAP.md and agent-orchestration.md
 - **.claude/** - Claude Code specific directory structure (created automatically)
 
 ## Key Features
@@ -80,9 +81,9 @@ The boilerplate template creates:
 
 2. Edit `CLAUDE.md` with your project-specific instructions
 
-3. Update `docs/ROADMAP.md` with your project goals
+3. Update `claude/docs/ROADMAP.md` with your project goals
 
-4. Start creating tickets in `tickets/` directory
+4. Start creating tickets in `claude/tickets/` directory
 
 ## Claude Code Integration
 
