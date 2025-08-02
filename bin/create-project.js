@@ -527,6 +527,18 @@ async function initializeClaudeDirectory(selectedAgentFiles, conflictStrategy, d
       }
     }
     
+    // Also create settings.json from the example if it doesn't exist
+    const settingsJsonDest = path.join(claudeDir, 'settings.json');
+    if (fs.existsSync(settingsExampleSrc) && !fs.existsSync(settingsJsonDest)) {
+      if (!dryRun) {
+        fs.copyFileSync(settingsExampleSrc, settingsJsonDest);
+      }
+      createdItems.push('.claude/settings.json');
+      if (dryRun) {
+        console.log('  ✨ Would create: .claude/settings.json (with hooks enabled)');
+      }
+    }
+    
     return {
       createdItems,
       skippedItems,
