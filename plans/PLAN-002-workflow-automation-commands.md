@@ -138,9 +138,118 @@ Finally, I'll use the checker agent to test and validate our implementation.
 - Reduced time from task request to completion
 - Improved consistency in task execution
 
+## Hook-Based Automatic Execution
+
+### UserPromptSubmit Hook
+Automatically detect workflow triggers in user prompts and execute appropriate workflows:
+
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command", 
+            "command": "claude-workflow-detector.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Workflow Detection Script
+```bash
+#!/bin/bash
+# claude-workflow-detector.sh
+
+input=$(cat)
+
+# Detect feature requests
+if echo "$input" | grep -iE "(implement|add|create|build).*(feature|functionality|component)" > /dev/null; then
+  echo '{"additionalContext": "Detected feature request. Consider using /workflow-feature command for systematic implementation."}'
+  exit 0
+fi
+
+# Detect bug reports
+if echo "$input" | grep -iE "(fix|bug|error|issue|broken|not working)" > /dev/null; then
+  echo '{"additionalContext": "Detected bug report. Consider using /workflow-bug command for systematic debugging."}'
+  exit 0
+fi
+
+# Detect API development
+if echo "$input" | grep -iE "(api|endpoint|rest|graphql).*(create|implement|build)" > /dev/null; then
+  echo '{"additionalContext": "Detected API development task. Consider using /workflow-api command."}'
+  exit 0
+fi
+
+# Detect QA requests
+if echo "$input" | grep -iE "(test|qa|quality|review).*(feature|code|implementation)" > /dev/null; then
+  echo '{"additionalContext": "Detected QA request. Consider using /workflow-qa command."}'
+  exit 0
+fi
+
+exit 0
+```
+
+### Advanced Hook: Auto-Execute Workflows
+```bash
+#!/bin/bash
+# auto-workflow-executor.sh
+
+input=$(cat)
+
+# Auto-execute feature workflow
+if echo "$input" | grep -iE "^(please |can you )?implement .* feature" > /dev/null; then
+  feature=$(echo "$input" | sed -E 's/.*(implement|create|add) (.*) feature.*/\2/')
+  echo "{\"transformedPrompt\": \"/workflow-feature $feature\"}"
+  exit 0
+fi
+
+# Auto-execute bug workflow
+if echo "$input" | grep -iE "^fix (the )?(bug|issue|problem)" > /dev/null; then
+  issue=$(echo "$input" | sed -E 's/.*fix (the )?(.*)/\2/')
+  echo "{\"transformedPrompt\": \"/workflow-bug $issue\"}"
+  exit 0
+fi
+
+echo "$input"
+```
+
+### PreToolUse Hooks for Workflow Steps
+Ensure proper sequencing and context preservation:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "workflow-context-manager.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Benefits of Hook Integration
+1. **Zero-friction workflows** - Users don't need to know commands
+2. **Intelligent detection** - Automatically identifies task types
+3. **Guided execution** - Suggests appropriate workflows
+4. **Fully automatic option** - Can transform prompts to workflow commands
+5. **Context preservation** - Hooks can manage state between agents
+
 ## Future Enhancements
 - Conditional branching based on agent outputs
 - Workflow templates for common scenarios
 - Integration with ticket system
 - Automatic plan/ticket creation
 - Workflow history and analytics
+- Machine learning for better pattern detection

@@ -436,6 +436,97 @@ async function initializeClaudeDirectory(selectedAgentFiles, conflictStrategy, d
       }
     }
     
+    // Copy .claude/hooks directory
+    const claudeHooksDir = path.join(claudeDir, 'hooks');
+    const templateHooksDir = path.join(templateDir, '.claude', 'hooks');
+    
+    if (fs.existsSync(templateHooksDir)) {
+      // Create .claude/hooks directory
+      if (!fs.existsSync(claudeHooksDir)) {
+        if (!dryRun) {
+          fs.mkdirSync(claudeHooksDir, { recursive: true });
+        }
+        createdItems.push('.claude/hooks/');
+        if (dryRun) {
+          console.log('  📁 Would create directory: .claude/hooks/');
+        }
+      }
+      
+      // Copy all files from template hooks directory
+      const hookFiles = fs.readdirSync(templateHooksDir);
+      for (const hookFile of hookFiles) {
+        const hookSrc = path.join(templateHooksDir, hookFile);
+        const hookDest = path.join(claudeHooksDir, hookFile);
+        
+        if (fs.statSync(hookSrc).isFile()) {
+          if (!fs.existsSync(hookDest)) {
+            if (!dryRun) {
+              fs.copyFileSync(hookSrc, hookDest);
+              // Make shell scripts executable
+              if (hookFile.endsWith('.sh')) {
+                fs.chmodSync(hookDest, '755');
+              }
+            }
+            createdItems.push(`.claude/hooks/${hookFile}`);
+            if (dryRun) {
+              console.log(`  ✨ Would copy: .claude/hooks/${hookFile}`);
+            }
+          } else {
+            if (conflictStrategy === 'overwrite') {
+              if (!dryRun) {
+                fs.copyFileSync(hookSrc, hookDest);
+                if (hookFile.endsWith('.sh')) {
+                  fs.chmodSync(hookDest, '755');
+                }
+              }
+              if (dryRun) {
+                console.log(`  ♻️  Would replace: .claude/hooks/${hookFile}`);
+              }
+            } else if (conflictStrategy === 'rename') {
+              const ext = path.extname(hookFile);
+              const baseName = path.basename(hookFile, ext);
+              let newDest = path.join(claudeHooksDir, `${baseName}-ccstart${ext}`);
+              let counter = 1;
+              while (fs.existsSync(newDest)) {
+                newDest = path.join(claudeHooksDir, `${baseName}-ccstart-${counter}${ext}`);
+                counter++;
+              }
+              if (!dryRun) {
+                fs.copyFileSync(hookSrc, newDest);
+                if (newDest.endsWith('.sh')) {
+                  fs.chmodSync(newDest, '755');
+                }
+              }
+              const relativePath = path.relative(claudeDir, newDest);
+              createdItems.push(relativePath);
+              if (dryRun) {
+                console.log(`  📄 Would create: ${relativePath}`);
+              }
+            } else {
+              skippedItems.push(`.claude/hooks/${hookFile}`);
+              if (dryRun) {
+                console.log(`  ⏭️  Would skip: .claude/hooks/${hookFile}`);
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    // Copy settings.json.example if it doesn't exist
+    const settingsExampleSrc = path.join(templateDir, '.claude', 'settings.json.example');
+    const settingsExampleDest = path.join(claudeDir, 'settings.json.example');
+    
+    if (fs.existsSync(settingsExampleSrc) && !fs.existsSync(settingsExampleDest)) {
+      if (!dryRun) {
+        fs.copyFileSync(settingsExampleSrc, settingsExampleDest);
+      }
+      createdItems.push('.claude/settings.json.example');
+      if (dryRun) {
+        console.log('  ✨ Would copy: .claude/settings.json.example');
+      }
+    }
+    
     return {
       createdItems,
       skippedItems,

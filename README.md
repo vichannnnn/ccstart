@@ -55,6 +55,8 @@ The boilerplate template creates:
 - **.claude/** - Claude Code specific directory structure (created automatically):
   - **.claude/agents/** - Selected agents copied here for Claude Code integration
   - **.claude/commands/** - Custom slash commands including /update-claude-md
+  - **.claude/hooks/** - Automatic workflow detection and suggestions
+  - **.claude/settings.json.example** - Example configuration for hooks
 
 ## Key Features
 
@@ -367,6 +369,39 @@ Commands support:
 - **Namespacing**: Organize in subdirectories (e.g., `/git/status`)
 
 See `.claude/commands/README.md` for detailed documentation on creating custom commands.
+
+### Automatic Workflow Detection (Hooks)
+
+The template includes intelligent hooks that automatically detect workflow patterns in your messages:
+
+#### How It Works
+When you describe a task to Claude, the workflow detector hook analyzes your message and suggests the appropriate workflow command:
+
+```bash
+# You type: "I need to add user authentication to my app"
+# Hook suggests: "🚀 Detected feature development task. Consider using: /workflow-feature"
+
+# You type: "Fix the bug where users get logged out"  
+# Hook suggests: "🐛 Detected bug fix task. Consider using: /workflow-bug"
+
+# You type: "Create a REST API for blog posts"
+# Hook suggests: "🔌 Detected API development task. Consider using: /workflow-api"
+```
+
+#### Setup
+1. Copy `.claude/settings.json.example` to `.claude/settings.json`
+2. The hooks are automatically active!
+
+The workflow detector recognizes:
+- **Feature requests** - implement, add, create, build
+- **Bug reports** - fix, bug, error, broken
+- **API development** - api, endpoint, REST, GraphQL
+- **QA tasks** - test, review, audit
+- **Refactoring** - refactor, optimize, clean up
+- **UI development** - UI, component, frontend
+- **Blockchain** - smart contract, web3, DeFi
+
+This means users can describe tasks naturally and Claude will guide them to the right workflow!
 
 ## Local Development & Testing
 

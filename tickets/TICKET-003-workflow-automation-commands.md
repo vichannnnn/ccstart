@@ -20,8 +20,11 @@ Create slash commands that automatically execute agent orchestration workflows, 
 - [ ] Commands accept arguments for task context
 - [ ] Commands automatically sequence through appropriate agents
 - [ ] Progress tracking integrated with TodoWrite
-- [ ] Update documentation to explain workflow commands
+- [ ] Create workflow detection hook for automatic suggestions
+- [ ] Add hook configuration files and examples
+- [ ] Update documentation to explain workflow commands and hooks
 - [ ] Test each command with real-world examples
+- [ ] Test hook detection patterns
 
 ## Technical Requirements
 - Commands must use `$ARGUMENTS` to accept user input
