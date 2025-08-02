@@ -2,6 +2,8 @@
 .git
 .gitignore
 node_modules/
+*.bak.js
+test-*/
 
 # Don't include the actual project files, only template
 agents/

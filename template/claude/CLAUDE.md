@@ -1,14 +1,16 @@
 # Claude Code Project Instructions
 
 ## Project Overview
-
+<!-- auto-generated-start:overview -->
 [Brief description of your project goes here]
+<!-- auto-generated-end:overview -->
 
 ## Key Objectives
-
+<!-- auto-generated-start:objectives -->
 - [Objective 1]
 - [Objective 2]
 - [Objective 3]
+<!-- auto-generated-end:objectives -->
 
 ## Project Structure
 
@@ -16,7 +18,8 @@
 .
 ├── CLAUDE.md          # This file - project instructions for Claude
 ├── .claude/           # Claude Code configuration (auto-generated)
-│   └── agents/        # Project-specific agent overrides
+│   ├── agents/        # Project-specific agent overrides
+│   └── commands/      # Custom slash commands for Claude Code
 ├── claude/            # Claude Code project organization
 │   ├── agents/        # Custom agents for specialized tasks
 │   ├── docs/          # Project documentation
@@ -46,13 +49,14 @@
 - Review changes before committing
 
 ## Common Commands
-
+<!-- auto-generated-start:commands -->
 ```bash
 # Add your common project commands here
 # npm install
 # npm run dev
 # npm test
 ```
+<!-- auto-generated-end:commands -->
 
 ## Important Context
 
@@ -65,6 +69,12 @@ See @claude/agents/README.md for available agents and their purposes
 ## Agent Orchestration
 
 After adding the agents you want to in `./claude/agents` folder, setup the workflow for Claude code to follow
+
+## Custom Commands
+
+Custom slash commands are available in `.claude/commands/`:
+- **/update-claude-md** - Automatically updates this file with project-specific information
+- See `.claude/commands/README.md` for creating your own commands
 
 ## Tickets
 
@@ -100,5 +110,6 @@ Before starting any task:
 6. **Maintain ticket list**: Always update @claude/tickets/ticket-list.md when creating, updating, or completing tickets to maintain a clear project overview
 
 ## Additional Notes
-
+<!-- auto-generated-start:notes -->
 [Any other important information for Claude to know about this project]
+<!-- auto-generated-end:notes -->

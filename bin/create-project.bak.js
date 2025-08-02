@@ -1004,7 +1004,7 @@ async function main() {
     console.log(`  ⏭️  Skipped ${claudeInitResult.skippedAgents} existing agents in .claude/agents`);
   }
 
-  console.log(`\n✅ Claude Code project ${flags.dryRun ? 'would be' : ''} created successfully!`);
+  console.log(`\n✅ Claude Code project ${flags.dryRun ? 'would be' : ''}created successfully!`);
   
   // Show summary of what happened
   if (fileConflicts.length > 0 || copiedCount > 0 || selectedAgentFiles.length > 0 || claudeInitResult) {

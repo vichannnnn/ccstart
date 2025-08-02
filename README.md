@@ -1,9 +1,9 @@
-# ccsetup
+# ccstart
 
-[![npm version](https://img.shields.io/npm/v/ccsetup.svg)](https://www.npmjs.com/package/ccsetup)
+[![npm version](https://img.shields.io/npm/v/ccstart.svg)](https://www.npmjs.com/package/ccstart)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/vichannnnn/claude-code/pulls)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![npm downloads](https://img.shields.io/npm/dm/ccsetup.svg)](https://www.npmjs.com/package/ccsetup)
+[![npm downloads](https://img.shields.io/npm/dm/ccstart.svg)](https://www.npmjs.com/package/ccstart)
 
 Quick setup for Claude Code projects with built-in agents, ticket system, planning tools and agent orchestration workflow.
 
@@ -11,20 +11,20 @@ Quick setup for Claude Code projects with built-in agents, ticket system, planni
 
 ```bash
 # Create a new project
-npx ccsetup my-project
+npx ccstart my-project
 
 # Setup in current directory
-npx ccsetup .
+npx ccstart .
 
 # Install globally (optional)
-npm install -g ccsetup
-ccsetup my-project
+npm install -g ccstart
+ccstart my-project
 ```
 
 ## Command Line Options
 
 ```bash
-ccsetup [project-name] [options]
+ccstart [project-name] [options]
 
 Options:
   --force, -f     Skip all prompts and overwrite existing files
@@ -35,12 +35,12 @@ Options:
   --help, -h      Show help message
 
 Examples:
-  ccsetup                    # Create in current directory
-  ccsetup my-project         # Create in new directory
-  ccsetup . --force          # Overwrite files in current directory
-  ccsetup my-app --dry-run   # Preview changes without creating files
-  ccsetup --agents           # Interactive agent selection only
-  ccsetup my-app --all-agents # Include all agents automatically
+  ccstart                    # Create in current directory
+  ccstart my-project         # Create in new directory
+  ccstart . --force          # Overwrite files in current directory
+  ccstart my-app --dry-run   # Preview changes without creating files
+  ccstart --agents           # Interactive agent selection only
+  ccstart my-app --all-agents # Include all agents automatically
 ```
 
 ## What's Included
@@ -68,14 +68,14 @@ The boilerplate template creates:
 ## Project Structure
 
 - **templates/** - The boilerplate templates that will be copied to user's project
-- **bin/** - CLI executable for ccsetup
-- **agents/**, **docs/**, **plans/**, **tickets/** - Working files for ccsetup development (not part of the template)
+- **bin/** - CLI executable for ccstart
+- **agents/**, **docs/**, **plans/**, **tickets/** - Working files for ccstart development (not part of the template)
 
 ## Usage
 
 1. Create a new project:
    ```bash
-   npx ccsetup my-awesome-project
+   npx ccstart my-awesome-project
    cd my-awesome-project
    ```
 
@@ -87,14 +87,14 @@ The boilerplate template creates:
 
 ## Claude Code Integration
 
-ccsetup seamlessly integrates with Claude Code:
+ccstart seamlessly integrates with Claude Code:
 
 - **Automatic Detection** - Checks if Claude Code is initialized in your project
 - **.claude Directory** - Creates Claude Code directory structure automatically
 - **Agent Installation** - Copies agents to `.claude/agents/` for native Claude Code support
 - **Smart Initialization** - Offers to create `.claude` directory if Claude Code isn't detected
 
-When running in the current directory (`npx ccsetup .`), it will check for Claude Code and provide instructions if not found. For new projects, ccsetup will remind you to initialize Claude Code after setup.
+When running in the current directory (`npx ccstart .`), it will check for Claude Code and provide instructions if not found. For new projects, ccstart will remind you to initialize Claude Code after setup.
 
 ## Using Agents
 
@@ -111,7 +111,7 @@ The boilerplate includes several specialized agents in the `agents/` directory:
 
 ### Interactive Agent Selection
 
-During setup, ccsetup will prompt you to select which agents to include:
+During setup, ccstart will prompt you to select which agents to include:
 
 ```bash
 🤖 Select agents to include in your Claude Code project
@@ -137,18 +137,18 @@ You can also use flags to control agent selection:
 Example:
 ```bash
 # Include all agents without prompting
-npx ccsetup my-project --all-agents
+npx ccstart my-project --all-agents
 
 # Create project without any agents
-npx ccsetup my-project --no-agents
+npx ccstart my-project --no-agents
 
 # Preview available agents only
-npx ccsetup --agents
+npx ccstart --agents
 ```
 
 ### Conflict Resolution
 
-When existing files are detected, ccsetup offers smart conflict resolution:
+When existing files are detected, ccstart offers smart conflict resolution:
 
 ```bash
 ⚠️  File conflicts detected. You will be asked how to handle each category.
@@ -158,7 +158,7 @@ When existing files are detected, ccsetup offers smart conflict resolution:
 
 Conflict resolution options:
   1) skip      (s) - Keep your existing files
-  2) rename    (r) - Save template files with -ccsetup suffix
+  2) rename    (r) - Save template files with -ccstart suffix
   3) overwrite (o) - Replace with template versions
 
 Your choice for CLAUDE.md [s/r/o]: 
@@ -278,7 +278,7 @@ The orchestration ensures nothing is missed and follows best practices automatic
 
 ## Getting Started with Claude Code
 
-After setting up your project with `ccsetup`:
+After setting up your project with `ccstart`:
 
 1. **Open Claude Code** in your project directory:
    ```bash
@@ -336,6 +336,35 @@ The template includes `docs/agent-orchestration.md` which defines workflows for:
 - **UI Components** - Frontend → Shadcn → Checker
 - **Blockchain** - Planner → Blockchain → Checker
 - **Quality Assurance** - Researcher → Checker → Coder → Checker
+
+### Custom Commands
+The template includes custom slash commands in `.claude/commands/` that enhance your Claude Code experience:
+
+#### Built-in Commands
+- **/update-claude-md** - Automatically updates CLAUDE.md with project-specific information
+  - Detects project type and structure
+  - Extracts metadata from package.json, README, etc.
+  - Updates marked sections while preserving your custom content
+  - Usage: Simply type `/update-claude-md` in Claude Code
+
+#### Creating Your Own Commands
+You can create custom commands by adding markdown files to `.claude/commands/`:
+
+```bash
+# Create a custom command
+echo "Analyze code quality and suggest improvements" > .claude/commands/code-review.md
+
+# Use in Claude Code
+/code-review
+```
+
+Commands support:
+- **Arguments**: Use `$ARGUMENTS` in your command
+- **Frontmatter**: Specify tools, model, and description
+- **Bash execution**: Include executable code blocks
+- **Namespacing**: Organize in subdirectories (e.g., `/git/status`)
+
+See `.claude/commands/README.md` for detailed documentation on creating custom commands.
 
 ## Credits
 

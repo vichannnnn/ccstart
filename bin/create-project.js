@@ -40,7 +40,7 @@ for (let i = 0; i < args.length; i++) {
 // Show help if requested
 if (flags.help) {
   console.log(`
-Usage: ccsetup [project-name] [options]
+Usage: ccstart [project-name] [options]
 
 Options:
   --force, -f     Skip all prompts and overwrite existing files
@@ -51,12 +51,12 @@ Options:
   --help, -h      Show this help message
 
 Examples:
-  ccsetup                    # Create in current directory
-  ccsetup my-project         # Create in new directory
-  ccsetup . --force          # Overwrite files in current directory
-  ccsetup my-app --dry-run   # Preview changes without creating files
-  ccsetup --agents           # Interactive agent selection only
-  ccsetup my-app --all-agents # Include all agents automatically
+  ccstart                    # Create in current directory
+  ccstart my-project         # Create in new directory
+  ccstart . --force          # Overwrite files in current directory
+  ccstart my-app --dry-run   # Preview changes without creating files
+  ccstart --agents           # Interactive agent selection only
+  ccstart my-app --all-agents # Include all agents automatically
 `);
   process.exit(0);
 }
@@ -219,10 +219,10 @@ async function initializeClaudeDirectory(selectedAgentFiles, conflictStrategy, d
           const ext = path.extname(claudeReadmeDest);
           const baseName = path.basename(claudeReadmeDest, ext);
           const dirName = path.dirname(claudeReadmeDest);
-          let newDest = path.join(dirName, `${baseName}-ccsetup${ext}`);
+          let newDest = path.join(dirName, `${baseName}-ccstart${ext}`);
           let counter = 1;
           while (fs.existsSync(newDest)) {
-            newDest = path.join(dirName, `${baseName}-ccsetup-${counter}${ext}`);
+            newDest = path.join(dirName, `${baseName}-ccstart-${counter}${ext}`);
             counter++;
           }
           if (!dryRun) {
@@ -268,10 +268,10 @@ async function initializeClaudeDirectory(selectedAgentFiles, conflictStrategy, d
           const ext = path.extname(agentsReadmeDest);
           const baseName = path.basename(agentsReadmeDest, ext);
           const dirName = path.dirname(agentsReadmeDest);
-          let newDest = path.join(dirName, `${baseName}-ccsetup${ext}`);
+          let newDest = path.join(dirName, `${baseName}-ccstart${ext}`);
           let counter = 1;
           while (fs.existsSync(newDest)) {
-            newDest = path.join(dirName, `${baseName}-ccsetup-${counter}${ext}`);
+            newDest = path.join(dirName, `${baseName}-ccstart-${counter}${ext}`);
             counter++;
           }
           if (!dryRun) {
@@ -341,10 +341,10 @@ async function initializeClaudeDirectory(selectedAgentFiles, conflictStrategy, d
             const ext = path.extname(agentDest);
             const baseName = path.basename(agentDest, ext);
             const dirName = path.dirname(agentDest);
-            let newDest = path.join(dirName, `${baseName}-ccsetup${ext}`);
+            let newDest = path.join(dirName, `${baseName}-ccstart${ext}`);
             let counter = 1;
             while (fs.existsSync(newDest)) {
-              newDest = path.join(dirName, `${baseName}-ccsetup-${counter}${ext}`);
+              newDest = path.join(dirName, `${baseName}-ccstart-${counter}${ext}`);
               counter++;
             }
             if (!dryRun) {
@@ -363,6 +363,73 @@ async function initializeClaudeDirectory(selectedAgentFiles, conflictStrategy, d
             skippedItems.push(`.claude/agents/${safeAgentFile}`);
             if (dryRun) {
               console.log(`  ⏭️  Would skip: .claude/agents/${safeAgentFile}`);
+            }
+          }
+        }
+      }
+    }
+    
+    // Copy .claude/commands directory
+    const claudeCommandsDir = path.join(claudeDir, 'commands');
+    const templateCommandsDir = path.join(templateDir, '.claude', 'commands');
+    
+    if (fs.existsSync(templateCommandsDir)) {
+      // Create .claude/commands directory
+      if (!fs.existsSync(claudeCommandsDir)) {
+        if (!dryRun) {
+          fs.mkdirSync(claudeCommandsDir, { recursive: true });
+        }
+        createdItems.push('.claude/commands/');
+        if (dryRun) {
+          console.log('  📁 Would create directory: .claude/commands/');
+        }
+      }
+      
+      // Copy all files from template commands directory
+      const commandFiles = fs.readdirSync(templateCommandsDir);
+      for (const commandFile of commandFiles) {
+        const commandSrc = path.join(templateCommandsDir, commandFile);
+        const commandDest = path.join(claudeCommandsDir, commandFile);
+        
+        if (fs.statSync(commandSrc).isFile()) {
+          if (!fs.existsSync(commandDest)) {
+            if (!dryRun) {
+              fs.copyFileSync(commandSrc, commandDest);
+            }
+            createdItems.push(`.claude/commands/${commandFile}`);
+            if (dryRun) {
+              console.log(`  ✨ Would copy: .claude/commands/${commandFile}`);
+            }
+          } else {
+            if (conflictStrategy === 'overwrite') {
+              if (!dryRun) {
+                fs.copyFileSync(commandSrc, commandDest);
+              }
+              if (dryRun) {
+                console.log(`  ♻️  Would replace: .claude/commands/${commandFile}`);
+              }
+            } else if (conflictStrategy === 'rename') {
+              const ext = path.extname(commandFile);
+              const baseName = path.basename(commandFile, ext);
+              let newDest = path.join(claudeCommandsDir, `${baseName}-ccstart${ext}`);
+              let counter = 1;
+              while (fs.existsSync(newDest)) {
+                newDest = path.join(claudeCommandsDir, `${baseName}-ccstart-${counter}${ext}`);
+                counter++;
+              }
+              if (!dryRun) {
+                fs.copyFileSync(commandSrc, newDest);
+              }
+              const relativePath = path.relative(claudeDir, newDest);
+              createdItems.push(relativePath);
+              if (dryRun) {
+                console.log(`  📄 Would create: ${relativePath}`);
+              }
+            } else {
+              skippedItems.push(`.claude/commands/${commandFile}`);
+              if (dryRun) {
+                console.log(`  ⏭️  Would skip: .claude/commands/${commandFile}`);
+              }
             }
           }
         }
@@ -548,7 +615,7 @@ async function main() {
         
         console.log(`${colors.yellow}${colors.bold}📝 Next Steps:${colors.reset}`);
         console.log(`${colors.dim}1. Make sure Claude Code is initialized: ${colors.reset}${colors.cyan}claude init${colors.reset}`);
-        console.log(`${colors.dim}2. Run: ${colors.reset}${colors.cyan}npx ccsetup${colors.reset}`);
+        console.log(`${colors.dim}2. Run: ${colors.reset}${colors.cyan}npx ccstart${colors.reset}`);
         console.log(`${colors.dim}3. Select the same agents when prompted${colors.reset}\n`);
       }
       
@@ -579,13 +646,13 @@ async function main() {
           console.log('📁 Creating .claude directory structure...\n');
         } else {
           console.log('⚠️  Claude Code not detected in this project.');
-          console.log('ccsetup can create the .claude directory structure for you.\n');
+          console.log('ccstart can create the .claude directory structure for you.\n');
           const answer = await prompt('Would you like to create .claude directory? (yes/no): ');
           if (answer !== 'yes') {
             console.log('\nTo manually initialize Claude Code:');
             console.log('1. Install Claude Code CLI: https://docs.anthropic.com/claude-code/quickstart');
             console.log('2. Run \'claude init\' in your project directory');
-            console.log('3. Then run \'npx ccsetup\' again\n');
+            console.log('3. Then run \'npx ccstart\' again\n');
             console.log('Aborting setup.');
             if (rl) rl.close();
             process.exit(0);
@@ -914,7 +981,7 @@ async function main() {
             
             console.log('\nConflict resolution options:');
             console.log('  1) skip      (s) - Keep your existing files');
-            console.log('  2) rename    (r) - Save template files with -ccsetup suffix');
+            console.log('  2) rename    (r) - Save template files with -ccstart suffix');
             console.log('  3) overwrite (o) - Replace with template versions');
             
             const userInput = await prompt(`Your choice for ${category.name} [s/r/o]: `);
@@ -927,7 +994,7 @@ async function main() {
             }
             
             if (strategy === 'overwrite' && category.key === 'CLAUDE.md') {
-              const confirm = await prompt('⚠️  Are you sure you want to overwrite CLAUDE.md? This will replace your existing project instructions with the ccsetup template! (yes/no): ');
+              const confirm = await prompt('⚠️  Are you sure you want to overwrite CLAUDE.md? This will replace your existing project instructions with the ccstart template! (yes/no): ');
               if (confirm !== 'yes') {
                 conflictStrategies[category.key] = 'skip';
                 console.log('Keeping existing CLAUDE.md');
@@ -989,10 +1056,10 @@ async function main() {
             const ext = path.extname(item.dest);
             const baseName = path.basename(item.dest, ext);
             const dirName = path.dirname(item.dest);
-            let newDest = path.join(dirName, `${baseName}-ccsetup${ext}`);
+            let newDest = path.join(dirName, `${baseName}-ccstart${ext}`);
             let counter = 1;
             while (fs.existsSync(newDest)) {
-              newDest = path.join(dirName, `${baseName}-ccsetup-${counter}${ext}`);
+              newDest = path.join(dirName, `${baseName}-ccstart-${counter}${ext}`);
               counter++;
             }
             if (!flags.dryRun) {
@@ -1049,14 +1116,14 @@ async function main() {
     console.log(`  ⏭️  Skipped ${claudeInitResult.skippedAgents} existing agents in .claude/agents`);
   }
 
-  console.log(`\n✅ Claude Code project ${flags.dryRun ? 'would be' : ''} created successfully!`);
+  console.log(`\n✅ Claude Code project ${flags.dryRun ? 'would be' : ''}created successfully!`);
   
   // Show summary of what happened
   if (fileConflicts.length > 0 || copiedCount > 0 || selectedAgentFiles.length > 0 || claudeInitResult) {
     console.log('\n📊 Summary:');
     if (copiedCount > 0) console.log(`  ✨ ${copiedCount} new files ${flags.dryRun ? 'would be' : ''} copied`);
     if (skippedCount > 0) console.log(`  ⏭️  ${skippedCount} existing files ${flags.dryRun ? 'would be' : ''} kept unchanged`);
-    if (renamedCount > 0) console.log(`  📄 ${renamedCount} template files ${flags.dryRun ? 'would be' : ''} saved with -ccsetup suffix`);
+    if (renamedCount > 0) console.log(`  📄 ${renamedCount} template files ${flags.dryRun ? 'would be' : ''} saved with -ccstart suffix`);
     if (overwrittenCount > 0) console.log(`  ♻️  ${overwrittenCount} files ${flags.dryRun ? 'would be' : ''} replaced with template versions`);
     if (!flags.noAgents && !flags.dryRun) {
       console.log(`  🤖 ${selectedAgentFiles.length} agent${selectedAgentFiles.length === 1 ? '' : 's'} ${flags.dryRun ? 'would be' : ''} included in claude/agents`);
@@ -1082,7 +1149,7 @@ async function main() {
     console.log('  3. Start creating tickets in the claude/tickets/ directory');
     
     if (renamedCount > 0) {
-      console.log('\n💡 Tip: Review the -ccsetup files to see template examples');
+      console.log('\n💡 Tip: Review the -ccstart files to see template examples');
       console.log('   You can compare them with your existing files or copy sections you need');
     }
     
