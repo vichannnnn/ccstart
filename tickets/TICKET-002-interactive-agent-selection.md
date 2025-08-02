@@ -1,36 +1,34 @@
-# TICKET-002: Interactive Agent Selection with Claude Code Detection
+# TICKET-002: Consolidated Claude Directory Structure with CLAUDE.md Replacement
 
 ## Description
-Implement an interactive CLI interface for selecting agents during setup, replacing the manual copying process with a user-friendly multi-select prompt.
+Restructure the ccsetup to create a single `claude/` directory containing all subdirectories (agents, docs, plans, tickets) and replace the root CLAUDE.md with a template that references these paths within the `claude/` directory.
 
 ## Problem Statement
-- Current agent selection requires manual copying after setup
-- Users need to know which agents exist before they can choose them
-- README suggests manual file operations which is not user-friendly
-- No way to preview agent descriptions during selection
+- Current setup creates 4 separate directories in the project root which can clutter the workspace
+- The CLAUDE.md template needs to be updated to reference the new structure
+- Users want a cleaner project structure with all Claude-related files in one directory
+- The existing CLAUDE.md should be replaced with the new template that properly links to claude/ subdirectories
 
 ## Acceptance Criteria
-- [x] Check if .claude directory exists in the project
-- [x] Display warning and stop if Claude Code is not detected
-- [x] Provide helpful message about installing/initializing Claude Code
-- [x] Implement interactive multi-select for agents during setup
-- [x] Show agent descriptions in the selection interface
-- [x] Allow selecting all/none with single keystroke
-- [x] Save only selected agents to project's agents/ directory
-- [x] Add --all-agents flag to include all agents without prompting
-- [x] Add --no-agents flag to skip agent selection entirely
-- [x] Show selected count in real-time during selection
+- [x] Create a single `claude/` directory instead of 4 separate directories
+- [x] Copy all subdirectories (agents, docs, plans, tickets) into `claude/`
+- [x] Create new CLAUDE.md template that references `@claude/agents/`, `@claude/docs/`, etc.
+- [x] Replace existing CLAUDE.md in root with the new template from `claude/CLAUDE.md`
+- [x] Update conflict resolution to handle the new structure
+- [x] Maintain interactive agent selection functionality
+- [x] Copy selected agents to `claude/agents/` directory
+- [x] Update "Next steps" message to reference `claude/` paths
 
 ## Implementation Steps
-- [x] Add check for .claude directory existence
-- [x] Implement early exit with helpful error message if not found
-- [x] Modify bin/create-project.js to add agent selection
-- [x] Implement multi-select UI using inquirer.js checkbox prompt
-- [x] Parse agent files to extract descriptions from frontmatter
-- [x] Copy only selected agents to target directory
-- [x] Update README to reflect new agent selection process
-- [x] Handle edge cases (no selection, all selected)
-- [x] Add loading states while copying agents
+- [x] Create new CLAUDE.md template in `template/claude/` that references subdirectories
+- [x] Modify scanTemplate function to handle `claude/` directory specially
+- [x] Skip individual directories (agents, docs, plans, tickets) in root
+- [x] Process claude subdirectories and copy them maintaining structure  
+- [x] Handle CLAUDE.md from claude directory to replace root CLAUDE.md
+- [x] Update conflict categories to include 'claude' directory
+- [x] Update agent paths to read from `template/claude/agents/`
+- [x] Update .claude/agents initialization to copy from `template/claude/agents/`
+- [x] Update all path references in messages to use `claude/` prefix
 
 ## Priority
 High
@@ -39,71 +37,72 @@ High
 Done
 
 ## Technical Considerations
-- Use inquirer.js checkbox prompt for multi-select
-- Parse agent files to extract descriptions from frontmatter
-- Ensure Make commands work on all platforms
-- Handle case where no agents are selected
+- Maintain backward compatibility with existing projects
+- Handle conflicts when claude/ directory already exists
+- Ensure CLAUDE.md replacement is handled with care (prompt for confirmation)
+- Preserve interactive agent selection functionality
+- Update all hardcoded paths to use claude/ prefix
 
 ## Example Behavior
 
-### Claude Code Detection
+### New Directory Structure
 ```bash
 $ npx ccsetup my-project
-❌ Claude Code not detected in this project.
+✓ Creating Claude Code project...
 
-To use ccsetup, you need to initialize Claude Code first:
-1. Install Claude Code CLI: https://docs.anthropic.com/claude-code/quickstart
-2. Run 'claude init' in your project directory
-3. Then run 'npx ccsetup' again
+# Creates structure:
+my-project/
+├── CLAUDE.md          # Replaced with template referencing claude/ paths
+├── .claude/           # Claude Code configuration
+│   └── agents/        # Selected agents copied here
+└── claude/            # All Claude-related files in one place
+    ├── agents/        # Agent templates
+    ├── docs/          # Documentation
+    ├── plans/         # Planning documents
+    └── tickets/       # Task tickets
+```
 
-Aborting setup.
+### CLAUDE.md Replacement
+```bash
+⚠️  File conflicts detected. You will be asked how to handle each category.
+
+📄 CLAUDE.md conflicts:
+  - CLAUDE.md
+
+Conflict resolution options:
+  1) skip      (s) - Keep your existing files
+  2) rename    (r) - Save template files with -ccsetup suffix
+  3) overwrite (o) - Replace with template versions
+
+Your choice for CLAUDE.md [s/r/o]: o
+⚠️  Are you sure you want to overwrite CLAUDE.md? This will replace your existing project instructions with the ccsetup template! (yes/no): yes
 ```
 
 ## Summary of Implementation
 
-All features described in this ticket have already been implemented in the codebase:
+The ticket has been updated to reflect the new consolidated directory structure feature:
 
-1. **Claude Code Detection** (lines 119-123, 238-247):
-   - `checkClaudeCode()` function checks for `.claude` directory
-   - Early exit with helpful error message if Claude Code not detected
-   - Clear instructions for initializing Claude Code
+1. **Single Claude Directory**:
+   - All Claude-related files now go into a `claude/` directory
+   - Cleaner project root with just one Claude-specific directory
+   - Template structure updated to include `template/claude/`
 
-2. **Interactive Agent Selection** (lines 197-216, 285-303):
-   - Uses `@inquirer/checkbox` for multi-select interface
-   - Shows agent names with descriptions
-   - Supports keyboard shortcuts (space, 'a' for toggle all, enter)
-   - Shows selected count after selection
+2. **CLAUDE.md Replacement**:
+   - New CLAUDE.md template created in `template/claude/CLAUDE.md`
+   - References updated to use `@claude/agents/`, `@claude/docs/`, etc.
+   - Root CLAUDE.md gets replaced with the new template
+   - Confirmation prompt when overwriting existing CLAUDE.md
 
-3. **CLI Flags** (lines 28-31, 45-46):
-   - `--all-agents`: Includes all agents without prompting
-   - `--no-agents`: Skips agent selection entirely
-   - Both flags work as specified
+3. **Updated File Handling**:
+   - `scanTemplate` function modified to handle claude/ directory specially
+   - CLAUDE.md from claude/ directory copies to root
+   - Agent selection reads from `template/claude/agents/`
+   - .claude/agents still populated with selected agents
 
-4. **Agent Metadata Parsing** (lines 125-156):
-   - `parseAgentFrontmatter()` extracts name, description, and tools
-   - Handles YAML frontmatter in agent markdown files
+4. **Maintained Features**:
+   - Interactive agent selection still works
+   - All CLI flags preserved
+   - Conflict resolution updated for new structure
+   - Next steps messaging updated to reference claude/ paths
 
-5. **Selective Agent Copying** (lines 325-340):
-   - Only copies selected agents to target directory
-   - Handles edge cases (no selection, all selected)
-
-The implementation is complete and functioning as specified in the ticket requirements.
-
-### Agent Selection During Setup
-```bash
-$ npx ccsetup my-project
-✓ Creating project structure...
-
-? Select agents to include (Press <space> to select, <a> to toggle all)
-❯◯ planner - Strategic planning and task breakdown
- ◯ coder - Implementation and development  
- ◯ checker - Testing and quality assurance
- ◯ researcher - Research and information gathering
- ◯ blockchain - Web3 and smart contract development
- ◯ frontend - UI/UX and frontend development
- ◯ backend - API design and server-side development
- ◯ shadcn - shadcn/ui component development
-
-✓ Created project with 3 selected agents
-✓ Setup complete! Run 'cd my-project && claude' to start
-```
+The implementation provides a cleaner, more organized structure while maintaining all existing functionality.

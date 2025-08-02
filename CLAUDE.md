@@ -1,7 +1,7 @@
 # Claude Code Project Instructions
 
 ## Project Overview
-ccsetup is a boilerplate generator designed to help developers quickly set up their Claude Code environment with pre-configured structure, specialized agents, ticket system, and planning tools. It provides a ready-to-use project structure optimized for AI-assisted development workflows.
+ccstart is a boilerplate generator designed to help developers quickly set up their Claude Code environment with pre-configured structure, specialized agents, ticket system, and planning tools. It provides a ready-to-use project structure optimized for AI-assisted development workflows.
 
 ## Key Objectives
 - Provide instant Claude Code project setup with a single command
@@ -122,14 +122,14 @@ node bin/index.js <project-name>
 
 # Test the package locally
 npm link
-ccsetup my-test-project
+ccstart my-test-project
 
 # Publish to npm
 npm publish
 ```
 
 ## Important Context
-- This is an npm package published as `ccsetup`
+- This is an npm package published as `ccstart`
 - The main entry point is `bin/index.js` which creates the boilerplate structure
 - Templates are stored in the `templates/` directory and copied to new projects
 - The package creates a complete Claude Code project structure with agents, documentation, and workflow templates

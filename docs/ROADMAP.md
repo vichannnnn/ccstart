@@ -49,11 +49,14 @@ High-level overview of the project, what it does, the main features
   - Establish docs, plans, and tickets directories
   - Add README files to all directories
 
-### [Add your project tasks here]
-- [ ] Task description
-  - Subtask 1
-  - Subtask 2
-  - See: /tickets/TICKET-XXX-description.md
+### Custom Commands System
+- [x] Implement Claude Code custom commands ✅
+  - Research Claude's slash command system
+  - Create command structure and discovery mechanism
+  - Implement /update-claude-md command
+  - Add documentation for custom commands
+  - See: /tickets/TICKET-001-claude-custom-commands.md
+  - See: /plans/PLAN-001-claude-custom-commands.md
 
 ## Future Enhancements
 

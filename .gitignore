@@ -182,5 +182,5 @@ credentials/
 *.7z
 
 # Custom project specific
-.claude/
+/.claude/
 .cache/

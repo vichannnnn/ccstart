@@ -1,9 +1,9 @@
 {
-  "name": "ccsetup",
-  "version": "1.0.9",
-  "description": "Boilerplate for Claude Code projects with agents, tickets, plans and agent orchestration workflow",
+  "name": "ccstart",
+  "version": "1.1.0",
+  "description": "Start your Claude Code projects with a well-organized structure including agents, tickets, plans and orchestration workflows",
   "bin": {
-    "ccsetup": "bin/create-project.js"
+    "ccstart": "bin/create-project.js"
   },
   "keywords": [
     "claude",
@@ -22,9 +22,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vichannnnn/claude-code.git"
+    "url": "git+https://github.com/vichannnnn/ccstart.git"
   },
-  "homepage": "https://github.com/vichannnnn/claude-code#readme",
+  "homepage": "https://github.com/vichannnnn/ccstart#readme",
   "files": [
     "bin/",
     "template/",
