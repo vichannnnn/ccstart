@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "description": "Detect workflow patterns and suggest appropriate commands",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/workflow-detector.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "tools": {
+    "enabled": true
+  }
+}
