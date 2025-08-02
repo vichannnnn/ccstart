@@ -1,46 +1,51 @@
 # Claude Code Project Instructions
 
 ## Project Overview
-ccstart is a boilerplate generator designed to help developers quickly set up their Claude Code environment with pre-configured structure, specialized agents, ticket system, and planning tools. It provides a ready-to-use project structure optimized for AI-assisted development workflows.
+<!-- auto-generated-start:overview -->
+ccstart is a quick setup tool for Claude Code projects that provides a well-organized structure with built-in AI agents, ticket system, planning tools, and agent orchestration workflows. It creates a comprehensive boilerplate that helps developers quickly initialize projects with best practices for AI-assisted development using Claude Code.
+<!-- auto-generated-end:overview -->
 
 ## Key Objectives
-- Provide instant Claude Code project setup with a single command
-- Include pre-built specialized agents for common development tasks
-- Establish organized workflow with tickets, plans, and documentation
-- Enable developers to start AI-assisted development immediately
+<!-- auto-generated-start:objectives -->
+- Provide a quick and easy way to initialize Claude Code projects with best practices
+- Include pre-configured AI agents (planner, coder, checker, researcher, etc.) for specialized tasks
+- Offer built-in ticket tracking and project planning systems
+- Enable agent orchestration workflows for common development patterns
+- Support interactive agent selection and conflict resolution during setup
+<!-- auto-generated-end:objectives -->
 
 ## Project Structure
+
 ```
 .
 ├── CLAUDE.md          # This file - project instructions for Claude
-├── agents/            # Custom agents for specialized tasks
-├── docs/              # Project documentation
-├── plans/             # Project plans and architectural documents
-└── tickets/           # Task tickets and issues
+├── .claude/           # Claude Code configuration (auto-generated)
+│   ├── agents/        # Project-specific agent overrides
+│   └── commands/      # Custom slash commands for Claude Code
+├── claude/            # Claude Code project organization
+│   ├── agents/        # Custom agents for specialized tasks
+│   ├── docs/          # Project documentation
+│   ├── plans/         # Project plans and architectural documents
+│   └── tickets/       # Task tickets and issues
+└── [your project files and directories]
 ```
 
 ## Development Guidelines
 
-### Agent Orchestration
-- **IMPORTANT**: Follow the agent workflows defined in @docs/agent-orchestration.md
-- Always use the appropriate workflow for your task type (Feature Development, Bug Fix, Refactoring, etc.)
-- Execute agents sequentially as defined in the orchestration guide
-- Track progress through workflows using TodoWrite
-
 ### Code Style
+
 - Follow existing code conventions in the project
 - Use consistent naming patterns
 - Maintain clean, readable code
 
 ### Testing
+
 - Run tests before committing changes
 - Add tests for new functionality
 - Ensure all tests pass
-- **IMPORTANT**: Only create test files within the project directory
-- Never use external paths like /tmp, /var, or ~/
-- Use project-relative paths for all test files and directories
 
 ### Git Workflow
+
 - Create descriptive commit messages
 - Keep commits focused and atomic
 - Review changes before committing
@@ -69,11 +74,11 @@ Follow the conventional commits specification:
 
 **Examples:**
 ```
-feat(agents): add backend development agent
-fix(setup): handle existing file conflicts during installation
-docs: update agent selection instructions in README
-refactor(cli): extract agent parsing into separate module
-chore(deps): update inquirer to 9.2.0
+feat(auth): add password reset functionality
+fix(api): handle null values in user response
+docs: update API documentation for book endpoints
+refactor(frontend): extract BookTable into separate components
+chore(deps): update FastAPI to 0.104.1
 ```
 
 ### Pull Request Guidelines
@@ -113,83 +118,111 @@ Closes #XXX (if applicable)
 ```
 
 ## Common Commands
+<!-- auto-generated-start:commands -->
 ```bash
-# Install dependencies
-npm install
+# Installation and Usage
+npm install -g ccstart          # Install globally
+npx ccstart my-project          # Create new project
+ccstart . --agents              # Setup in current directory with agent selection
 
-# Run the setup script locally
-node bin/index.js <project-name>
+# Testing
+npm test                        # Run tests
+npm run test:watch              # Run tests in watch mode
+npm run test:coverage           # Run tests with coverage
 
-# Test the package locally
-npm link
-ccstart my-test-project
+# Local Development
+npm link                        # Link for local development
+npm unlink -g ccstart           # Unlink after development
 
-# Publish to npm
-npm publish
+# CLI Options
+ccstart --help                  # Show help
+ccstart --all-agents            # Include all agents
+ccstart --force                 # Skip prompts and overwrite
+ccstart --dry-run               # Preview changes without applying
 ```
+<!-- auto-generated-end:commands -->
 
 ## Important Context
-- This is an npm package published as `ccstart`
-- The main entry point is `bin/index.js` which creates the boilerplate structure
-- Templates are stored in the `templates/` directory and copied to new projects
-- The package creates a complete Claude Code project structure with agents, documentation, and workflow templates
-- Users can customize which agents to include by copying only needed ones to their project
+
+[Add any project-specific context, dependencies, or requirements here]
 
 ## Agents
-See @agents/README.md for available agents and their purposes
+
+See @claude/agents/README.md for available agents and their purposes
+
+## Agent Orchestration
+
+After adding the agents you want to in `./claude/agents` folder, setup the workflow for Claude code to follow
+
+## Custom Commands
+
+Custom slash commands are available in `.claude/commands/`:
+- **/update-claude-md** - Automatically updates this file with project-specific information
+- See `.claude/commands/README.md` for creating your own commands
 
 ## Tickets
-See @tickets/README.md for ticket format and management approach
+
+See @claude/tickets/README.md for ticket format and management approach
+
+### Ticket Management
+- **Ticket List**: Maintain @claude/tickets/ticket-list.md as a centralized index of all tickets
+- **Update ticket-list.md** whenever you:
+  - Create a new ticket (add to appropriate priority section)
+  - Change ticket status (update emoji and move if completed)
+  - Complete a ticket (move to completed section with date)
+- **Status Emojis**: 🔴 Todo | 🟡 In Progress | 🟢 Done | 🔵 Blocked | ⚫ Cancelled
 
 ## Plans
-See @plans/README.md for planning documents and architectural decisions
 
-## Development Context 
+See @claude/plans/README.md for planning documents and architectural decisions
 
-- See @docs/ROADMAP.md for current status and next steps
-- Task-based development workflow with tickets in `/tickets` directory
-- Use `/plans` directory for architectural decisions and implementation roadmaps
+## Development Context
+
+- See @claude/docs/ROADMAP.md for current status and next steps
+- Task-based development workflow with tickets in `claude/tickets` directory
+- Use `claude/plans` directory for architectural decisions and implementation roadmaps
 
 ## Important Instructions
 
 Before starting any task:
-1. **Follow Agent Orchestration**: Refer to @docs/agent-orchestration.md and follow the appropriate workflow for your task type
-2. **Confirm understanding**: Always confirm you understand the request and outline your plan before proceeding
-3. **Ask clarifying questions**: Never make assumptions - ask questions when requirements are unclear
-4. **Create planning documents**: Before implementing any code or features, create a markdown file documenting the approach
-5. **Use plans directory**: When discussing ideas or next steps, create timestamped files in the plans directory (e.g., `plans/next-steps-YYYY-MM-DD-HH-MM-SS.md`) to maintain a record of decisions
-6. **No code comments**: Never add comments to any code you write - code should be self-documenting
-7. **Sequential agent execution**: When using multiple agents, execute them in the order specified in the orchestration workflows
 
-## File Management Rules
-
-### CRITICAL: Working Directory Restrictions
-1. **ALWAYS** work exclusively within the project directory
-2. **NEVER** create or modify files outside the project root
-3. **NEVER** use absolute paths to external directories (e.g., /tmp, /var, /usr, ~/)
-4. **ALWAYS** use project-relative paths for all file operations
-
-### Test File Organization
-- Place test files in designated test directories:
-  - `__test__/` or `__tests__/` for JavaScript/TypeScript projects
-  - `test/` for general test files and fixtures
-  - `spec/` for specification-based tests
-  - Follow project-specific conventions if different
-- Mirror source code structure in test directories
-- Use appropriate naming conventions (*.test.js, *.spec.ts, test_*.py)
-
-### Example File Operations
-```bash
-# CORRECT - Project relative paths
-mkdir -p __test__/unit
-touch __test__/unit/component.test.js
-echo "data" > test/fixtures/sample.json
-
-# INCORRECT - External paths (NEVER DO THIS)
-# touch /tmp/test.js
-# mkdir ~/test-files
-# echo "data" > /var/tmp/output.txt
-```
+1. **Confirm understanding**: Always confirm you understand the request and outline your plan before proceeding
+2. **Ask clarifying questions**: Never make assumptions - ask questions when requirements are unclear
+3. **Create planning documents**: Before implementing any code or features, create a markdown file documenting the approach
+4. **Use plans directory**: When discussing ideas or next steps, create timestamped files in the plans directory (e.g., `claude/plans/next-steps-YYYY-MM-DD-HH-MM-SS.md`) to maintain a record of decisions
+5. **No code comments**: Never add comments to any code you write - code should be self-documenting
+6. **Maintain ticket list**: Always update @claude/tickets/ticket-list.md when creating, updating, or completing tickets to maintain a clear project overview
 
 ## Additional Notes
-[Any other important information for Claude to know about this project]
+<!-- auto-generated-start:notes -->
+**Technology Stack:**
+- Node.js CLI application
+- Jest for testing
+- @inquirer/checkbox for interactive agent selection
+- No build process required - runs directly with Node.js
+
+**Key Features:**
+- Interactive agent selection during setup
+- Automatic workflow detection via hooks
+- Conflict resolution for existing files
+- Dry run mode for previewing changes
+- Force mode for automated workflows
+- Pre-configured agent orchestration workflows
+
+**Development Workflow:**
+This is the ccstart tool itself, not a project created by ccstart. When developing:
+1. Use `npm link` for local testing
+2. Test changes by running `ccstart` in test directories
+3. Run tests with `npm test` before committing
+4. Update version in package.json before publishing
+
+**Available Agents:**
+- planner: Strategic planning and architectural decisions
+- coder: Implementation and bug fixes
+- checker: Quality assurance and testing
+- researcher: Information gathering from codebases and online
+- frontend: UI/UX development
+- backend: Server-side development
+- blockchain: Web3 and smart contract development
+- shadcn: shadcn/ui component implementation
+<!-- auto-generated-end:notes -->
