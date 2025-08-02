@@ -48,6 +48,73 @@
 - Keep commits focused and atomic
 - Review changes before committing
 
+## Commit Convention and Pull Request Guidelines
+
+### Commit Message Format
+Follow the conventional commits specification:
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+**Types:**
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, missing semicolons, etc.)
+- `refactor`: Code refactoring without changing functionality
+- `test`: Adding or modifying tests
+- `chore`: Maintenance tasks (updating dependencies, build process, etc.)
+- `perf`: Performance improvements
+
+**Examples:**
+```
+feat(auth): add password reset functionality
+fix(api): handle null values in user response
+docs: update API documentation for book endpoints
+refactor(frontend): extract BookTable into separate components
+chore(deps): update FastAPI to 0.104.1
+```
+
+### Pull Request Guidelines
+
+**PR Title**: Use the same format as commit messages
+
+**PR Description Template:**
+```markdown
+## Summary
+Brief description of what this PR does and why it's needed.
+
+## Changes
+- List of specific changes made
+- Technical implementation details if relevant
+
+## Testing
+- [ ] Tests pass (if applicable)
+- [ ] Manual testing completed
+- [ ] No console errors or warnings
+
+## Manual Testing Steps
+1. Describe steps to manually test the feature
+2. Expected behavior and edge cases tested
+
+## Screenshots (if UI changes)
+Attach relevant screenshots here
+
+## Related Issues
+Closes #XXX (if applicable)
+
+## Checklist
+- [ ] Code follows project conventions
+- [ ] Self-documented code without unnecessary comments
+- [ ] All tests pass
+- [ ] Documentation updated if needed
+- [ ] No sensitive information exposed
+```
+
 ## Common Commands
 <!-- auto-generated-start:commands -->
 ```bash
