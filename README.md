@@ -52,7 +52,9 @@ The boilerplate template creates:
   - **claude/tickets/** - Task tracking system
   - **claude/plans/** - Project planning documents
   - **claude/docs/** - Documentation with ROADMAP.md and agent-orchestration.md
-- **.claude/** - Claude Code specific directory structure (created automatically)
+- **.claude/** - Claude Code specific directory structure (created automatically):
+  - **.claude/agents/** - Selected agents copied here for Claude Code integration
+  - **.claude/commands/** - Custom slash commands including /update-claude-md
 
 ## Key Features
 
