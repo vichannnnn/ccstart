@@ -368,6 +368,54 @@ Commands support:
 
 See `.claude/commands/README.md` for detailed documentation on creating custom commands.
 
+## Local Development & Testing
+
+If you're contributing to ccstart or want to test changes locally without publishing to npm:
+
+### Method 1: Using npm link (Recommended)
+
+```bash
+# In the ccstart directory
+cd /path/to/ccstart
+npm link
+
+# Now you can use ccstart globally
+ccstart my-test-project
+
+# Or in any other directory
+cd ~/my-projects
+ccstart test-app
+```
+
+### Method 2: Direct execution
+
+```bash
+# From the ccstart directory
+node bin/create-project.js ../my-test-project
+
+# Or test in current directory
+node bin/create-project.js .
+```
+
+### Method 3: Using npx with local path
+
+```bash
+# From any directory
+npx /path/to/ccstart my-test-project
+```
+
+### Testing different scenarios
+
+```bash
+# Test with all flags
+ccstart test-project --all-agents --force
+ccstart test-dry-run --dry-run
+ccstart --agents  # Preview agents only
+
+# Clean up link when done
+npm unlink -g ccstart
+```
+
 ## Credits
 
 Born from our discussions in TechOverflow with [vichannnnn](https://github.com/vichannnnn) and [nasdin](https://github.com/nasdin)
