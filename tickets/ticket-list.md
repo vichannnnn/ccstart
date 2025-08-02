@@ -5,9 +5,10 @@ This file provides a quick overview of all tickets in the `/tickets` directory w
 
 ## Status Summary
 
-### ✅ Done (2)
-- **TICKET-001**: Prevent File Overwrites in npx ccsetup
-- **TICKET-002**: Interactive Agent Selection
+### ✅ Done (3)
+- **TICKET-001**: Claude Custom Commands Implementation
+- **TICKET-002**: Consolidated Claude Directory Structure with CLAUDE.md Replacement
+- **TICKET-004**: Prevent File Overwrites in npx ccsetup
 
 ### 📋 Todo (1)
 - **TICKET-003**: Implement Workflow Automation Commands
@@ -19,15 +20,16 @@ This file provides a quick overview of all tickets in the `/tickets` directory w
 
 | Ticket ID | Title | Status | Priority |
 |-----------|-------|--------|----------|
-| [TICKET-001](./TICKET-001-prevent-file-overwrites.md) | Prevent File Overwrites in npx ccsetup | Done | High |
-| [TICKET-002](./TICKET-002-interactive-agent-selection.md) | Interactive Agent Selection | Done | High |
+| [TICKET-001](./TICKET-001-claude-custom-commands.md) | Claude Custom Commands Implementation | Done | High |
+| [TICKET-002](./TICKET-002-interactive-agent-selection.md) | Consolidated Claude Directory Structure with CLAUDE.md Replacement | Done | High |
 | [TICKET-003](./TICKET-003-workflow-automation-commands.md) | Implement Workflow Automation Commands | Todo | High |
+| [TICKET-004](./TICKET-004-prevent-file-overwrites.md) | Prevent File Overwrites in npx ccsetup | Done | High |
 
 ## Statistics
-- **Total Tickets**: 3
-- **Completed**: 2 (67%)
+- **Total Tickets**: 4
+- **Completed**: 3 (75%)
 - **In Progress**: 0 (0%)
-- **Todo**: 1 (33%)
+- **Todo**: 1 (25%)
 
 ## Last Updated
 2025-08-02
