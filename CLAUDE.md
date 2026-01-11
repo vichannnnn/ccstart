@@ -157,7 +157,6 @@ After adding the agents you want to in `./claude/agents` folder, setup the workf
 ## Custom Commands
 
 Custom slash commands are available in `.claude/commands/`:
-- **/update-claude-md** - Automatically updates this file with project-specific information
 - See `.claude/commands/README.md` for creating your own commands
 
 ## Tickets
