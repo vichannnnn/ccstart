@@ -140,8 +140,21 @@ After adding the agents you want to in `./claude/agents` folder, setup the workf
 ## Custom Commands
 
 Custom slash commands are available in `.claude/commands/`:
+
+**Git Workflow:**
+- **/commit** - Generate and execute git commits following conventional commit format
+- **/create-pr** - Create GitHub pull requests with structured descriptions
+- **/review-pr** - Review pull requests with systematic quality checks
+
+**Project Management:**
+- **/create-ticket** - Create task tickets with proper numbering and update ticket-list.md
+- **/design-feature** - Guide feature development through requirements and design phases
+- **/create-plan** - Create timestamped planning documents
+
+**Utilities:**
 - **/update-claude-md** - Automatically updates this file with project-specific information
-- See `.claude/commands/README.md` for creating your own commands
+
+See `.claude/commands/README.md` for creating your own commands
 
 ## Tickets
 

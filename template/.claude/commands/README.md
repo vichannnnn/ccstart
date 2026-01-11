@@ -4,7 +4,43 @@ This directory contains custom slash commands for Claude Code. These commands en
 
 ## Available Commands
 
-### /update-claude-md
+### Git Workflow
+
+#### /commit
+Generate and execute git commits following conventional commit format.
+
+Usage: `/commit`
+
+#### /create-pr
+Create GitHub pull requests with properly structured descriptions.
+
+Usage: `/create-pr`
+
+#### /review-pr
+Review pull requests with systematic quality checks.
+
+Usage: `/review-pr 123` or `/review-pr https://github.com/org/repo/pull/123`
+
+### Project Management
+
+#### /create-ticket
+Create task tickets with proper numbering and update ticket-list.md.
+
+Usage: `/create-ticket`
+
+#### /design-feature
+Guide feature development through requirements and design phases.
+
+Usage: `/design-feature`
+
+#### /create-plan
+Create timestamped planning documents.
+
+Usage: `/create-plan`
+
+### Utilities
+
+#### /update-claude-md
 Updates the CLAUDE.md file with project-specific information automatically detected from your codebase.
 
 Usage: `/update-claude-md`
