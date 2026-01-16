@@ -255,12 +255,8 @@ This is the ccstart tool itself, not a project created by ccstart. When developi
 4. Update version in package.json before publishing
 
 **Available Agents:**
-- planner: Strategic planning and architectural decisions
-- coder: Implementation and bug fixes
-- checker: Quality assurance and testing
-- researcher: Information gathering from codebases and online
-- frontend: UI/UX development
-- backend: Server-side development
-- blockchain: Web3 and smart contract development
-- shadcn: shadcn/ui component implementation
+- planner: Strategic planning and task breakdown
+- checker: Quality assurance and code review
+- backend: FastAPI and Python backend
+- frontend: React and TypeScript frontend
 <!-- auto-generated-end:notes -->

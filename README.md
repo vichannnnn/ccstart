@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm downloads](https://img.shields.io/npm/dm/ccstart.svg)](https://www.npmjs.com/package/ccstart)
 
-Quick setup for Claude Code projects with built-in agents, ticket system, planning tools and agent orchestration workflow.
+Quick setup for Claude Code projects with built-in agents, skills, tickets, and orchestration workflows.
 
 ## Installation
 
@@ -21,40 +21,51 @@ npm install -g ccstart
 ccstart my-project
 ```
 
-## What's Included
+## What You Get
 
-- **CLAUDE.md** - Project instructions for Claude (references claude/ subdirectories)
-- **claude/** - All Claude-related files in one organized directory:
-  - **agents/** - 8 specialized AI agents (planner, coder, checker, researcher, etc.)
-  - **tickets/** - Task tracking system with ticket templates
-  - **plans/** - Project planning documents
-  - **docs/** - ROADMAP.md and agent orchestration workflows
-- **.claude/** - Claude Code configuration (created automatically):
-  - **agents/** - Selected agents for Claude Code integration
-  - **commands/** - Custom slash commands including `/update-claude-md`
-  - **hooks/** - Automatic workflow detection
-  - **settings.json.example** - Hook configuration
-
-## Key Features
-
-- 🎯 **Interactive Agent Selection** - Choose which agents to include during setup
-- 🔄 **Agent Orchestration Workflows** - Pre-defined workflows that coordinate multiple agents
-- 🔒 **Smart Conflict Resolution** - Handle existing files with skip/rename/overwrite options
-- 📁 **Auto-detects Claude Code** - Creates .claude directory structure automatically
-- 🏃 **Dry Run Mode** - Preview changes before applying them
-- ⚡ **Force Mode** - Skip all prompts for automated workflows
-- 🎭 **Workflow Commands** - Execute complex workflows with single commands
-- 🪝 **Intelligent Hooks** - Automatically detect task patterns and suggest workflows
-
-## Quick Start
-
-```bash
-npx ccstart my-project
-cd my-project
-
-# Edit CLAUDE.md with your project details
-# Start using Claude Code with pre-configured agents and workflows
 ```
+my-project/
+├── CLAUDE.md                 # Project instructions for Claude
+├── claude/
+│   ├── agents/               # 4 specialized agents
+│   ├── docs/                 # ROADMAP.md + agent-orchestration.md
+│   ├── skills/               # Workflow automation (commit, create-pr, etc.)
+│   └── tickets/              # Task tracking system
+└── .claude/
+    ├── agents/               # Agents for Claude Code integration
+    └── skills/               # Skills for Claude Code integration
+```
+
+## The Workflow
+
+### How Claude Uses Your Project
+
+1. **CLAUDE.md** provides context and instructions
+2. **Agents** handle specialized tasks:
+   - `planner` - Strategic planning and task breakdown
+   - `checker` - Quality assurance and code review
+   - `backend` - FastAPI/Python backend development
+   - `frontend` - React/TypeScript frontend development
+3. **Skills** automate common workflows:
+   - `/commit` - Conventional commits
+   - `/create-pr` - Structured pull requests
+   - `/create-ticket` - Task ticket creation
+   - `/design-feature` - Feature design phases
+4. **Tickets** track tasks with status emojis
+
+### Agent Orchestration Workflows
+
+Pre-configured workflows that coordinate agents:
+
+| Workflow | Flow |
+|----------|------|
+| Feature Development | Planner → Backend/Frontend → Checker |
+| Bug Fix | Planner → Backend/Frontend → Checker |
+| API Development | Planner → Backend → Frontend → Checker |
+| UI Components | Planner → Frontend → Checker |
+| Quality Assurance | Planner → Checker → Fix → Checker |
+
+See `claude/docs/agent-orchestration.md` for detailed workflow documentation.
 
 ## Command Line Options
 
@@ -75,33 +86,24 @@ Examples:
   ccstart --agents             # Preview available agents
 ```
 
-## Agent Orchestration
+## Key Features
 
-The template includes pre-configured workflows that automatically coordinate agents:
+- **Interactive Agent Selection** - Choose which agents to include during setup
+- **Agent Orchestration Workflows** - Pre-defined workflows that coordinate multiple agents
+- **Smart Conflict Resolution** - Handle existing files with skip/rename/overwrite options
+- **Auto-detects Claude Code** - Creates .claude directory structure automatically
+- **Dry Run Mode** - Preview changes before applying them
+- **Force Mode** - Skip all prompts for automated workflows
 
-- **Feature Development** → Researcher → Planner → Coder → Checker
-- **Bug Fix** → Researcher → Coder → Checker
-- **API Development** → Planner → Backend → Frontend → Checker
-- **Refactoring** → Researcher → Planner → Coder → Checker
-- **UI Components** → Frontend → Shadcn → Checker
-- **Quality Assurance** → Researcher → Checker → Coder → Checker
+## Quick Start
 
-See `claude/docs/agent-orchestration.md` for detailed workflow documentation.
+```bash
+npx ccstart my-project
+cd my-project
 
-## Custom Commands & Hooks
-
-### Slash Commands
-- `/update-claude-md` - Automatically populate project information in CLAUDE.md
-- `/workflow-*` commands - Execute orchestrated workflows (coming soon)
-
-### Automatic Workflow Detection
-Hooks automatically detect task patterns and suggest appropriate workflows:
-- Feature requests → suggests `/workflow-feature`
-- Bug reports → suggests `/workflow-bug`
-- API tasks → suggests `/workflow-api`
-- And more! (QA, refactoring, UI components, blockchain)
-
-Hooks are automatically enabled - no setup required!
+# Edit CLAUDE.md with your project details
+# Start using Claude Code with pre-configured agents and workflows
+```
 
 ## Local Development
 

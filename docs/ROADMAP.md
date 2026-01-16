@@ -9,7 +9,6 @@ High-level overview of the project, what it does, the main features
 1. **Task Planning**
    - Study the existing codebase and understand the current state
    - Use the **planner** agent to break down complex problems and create implementation roadmaps
-   - Create a plan document in the `/plans` directory for complex features
    - Update `ROADMAP.md` to include the new task under Development
    - Priority tasks should be inserted after the last completed task
 
@@ -23,7 +22,7 @@ High-level overview of the project, what it does, the main features
    - For new tickets, use empty checkboxes and no summary section
 
 3. **Task Implementation**
-   - Use the **coder** agent for implementing features, fixing bugs, and optimizing code
+   - Use the **backend** or **frontend** agent for implementing features
    - Follow the specifications in the ticket file
    - Implement features and functionality following project conventions
    - Update step progress within the ticket file after each step
@@ -36,27 +35,13 @@ High-level overview of the project, what it does, the main features
    - Document any issues found and their resolutions
 
 5. **Roadmap Updates**
-   - Mark completed tasks with ✅ in the roadmap
+   - Mark completed tasks with checkmarks in the roadmap
    - Add reference to the ticket file (e.g., `See: /tickets/TICKET-001-user-auth.md`)
    - Update related plan documents if applicable
 
 ## Development
 
-### Project Setup and Boilerplate
-- [x] Create Claude Code boilerplate structure ✅
-  - Set up CLAUDE.md with project instructions
-  - Create agents directory with planner, coder, and checker agents
-  - Establish docs, plans, and tickets directories
-  - Add README files to all directories
-
-### Custom Commands System
-- [x] Implement Claude Code custom commands ✅
-  - Research Claude's slash command system
-  - Create command structure and discovery mechanism
-  - Implement /update-claude-md command
-  - Add documentation for custom commands
-  - See: /tickets/TICKET-001-claude-custom-commands.md
-  - See: /plans/PLAN-001-claude-custom-commands.md
+[Add development tasks here]
 
 ## Future Enhancements
 

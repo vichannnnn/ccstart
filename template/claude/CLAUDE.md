@@ -19,11 +19,11 @@
 ├── CLAUDE.md          # This file - project instructions for Claude
 ├── .claude/           # Claude Code configuration (auto-generated)
 │   ├── agents/        # Project-specific agent overrides
-│   └── commands/      # Custom slash commands for Claude Code
+│   └── skills/        # Skills for workflow automation
 ├── claude/            # Claude Code project organization
 │   ├── agents/        # Custom agents for specialized tasks
 │   ├── docs/          # Project documentation
-│   ├── plans/         # Project plans and architectural documents
+│   ├── skills/        # Skill definitions (source of truth)
 │   └── tickets/       # Task tickets and issues
 └── [your project files and directories]
 ```
@@ -137,24 +137,23 @@ See @claude/agents/README.md for available agents and their purposes
 
 After adding the agents you want to in `./claude/agents` folder, setup the workflow for Claude code to follow
 
-## Custom Commands
+## Skills
 
-Custom slash commands are available in `.claude/commands/`:
+Skills extend Claude's capabilities with specialized workflows. Available skills:
 
 **Git Workflow:**
 - **/commit** - Generate and execute git commits following conventional commit format
 - **/create-pr** - Create GitHub pull requests with structured descriptions
-- **/review-pr** - Review pull requests with systematic quality checks
 
 **Project Management:**
 - **/create-ticket** - Create task tickets with proper numbering and update ticket-list.md
 - **/design-feature** - Guide feature development through requirements and design phases
-- **/create-plan** - Create timestamped planning documents
 
 **Utilities:**
-- **/update-claude-md** - Automatically updates this file with project-specific information
+- **/design-principles** - Enforce a precise, minimal design system
+- **/skill-creator** - Guide for creating new skills
 
-See `.claude/commands/README.md` for creating your own commands
+See `claude/skills/` for skill definitions and `.claude/skills/` for Claude Code integration
 
 ## Tickets
 
@@ -168,15 +167,10 @@ See @claude/tickets/README.md for ticket format and management approach
   - Complete a ticket (move to completed section with date)
 - **Status Emojis**: 🔴 Todo | 🟡 In Progress | 🟢 Done | 🔵 Blocked | ⚫ Cancelled
 
-## Plans
-
-See @claude/plans/README.md for planning documents and architectural decisions
-
 ## Development Context
 
 - See @claude/docs/ROADMAP.md for current status and next steps
 - Task-based development workflow with tickets in `claude/tickets` directory
-- Use `claude/plans` directory for architectural decisions and implementation roadmaps
 
 ## Important Instructions
 
@@ -184,10 +178,8 @@ Before starting any task:
 
 1. **Confirm understanding**: Always confirm you understand the request and outline your plan before proceeding
 2. **Ask clarifying questions**: Never make assumptions - ask questions when requirements are unclear
-3. **Create planning documents**: Before implementing any code or features, create a markdown file documenting the approach
-4. **Use plans directory**: When discussing ideas or next steps, create timestamped files in the plans directory (e.g., `claude/plans/next-steps-YYYY-MM-DD-HH-MM-SS.md`) to maintain a record of decisions
-5. **No code comments**: Never add comments to any code you write - code should be self-documenting
-6. **Maintain ticket list**: Always update @claude/tickets/ticket-list.md when creating, updating, or completing tickets to maintain a clear project overview
+3. **No code comments**: Never add comments to any code you write - code should be self-documenting
+4. **Maintain ticket list**: Always update @claude/tickets/ticket-list.md when creating, updating, or completing tickets to maintain a clear project overview
 
 ## Additional Notes
 <!-- auto-generated-start:notes -->

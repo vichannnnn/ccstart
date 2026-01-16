@@ -9,7 +9,6 @@ High-level overview of the project, what it does, the main features
 1. **Task Planning**
    - Study the existing codebase and understand the current state
    - Use the **planner** agent to break down complex problems and create implementation roadmaps
-   - Create a plan document in the `/plans` directory for complex features
    - Update `ROADMAP.md` to include the new task under Development
    - Priority tasks should be inserted after the last completed task
 
@@ -23,7 +22,7 @@ High-level overview of the project, what it does, the main features
    - For new tickets, use empty checkboxes and no summary section
 
 3. **Task Implementation**
-   - Use the **coder** agent for implementing features, fixing bugs, and optimizing code
+   - Use the **backend** or **frontend** agent for implementing features, fixing bugs, and optimizing code
    - Follow the specifications in the ticket file
    - Implement features and functionality following project conventions
    - Update step progress within the ticket file after each step
@@ -38,15 +37,14 @@ High-level overview of the project, what it does, the main features
 5. **Roadmap Updates**
    - Mark completed tasks with ✅ in the roadmap
    - Add reference to the ticket file (e.g., `See: /tickets/TICKET-001-user-auth.md`)
-   - Update related plan documents if applicable
 
 ## Development
 
 ### Project Setup and Boilerplate
 - [x] Create Claude Code boilerplate structure ✅
   - Set up CLAUDE.md with project instructions
-  - Create agents directory with planner, coder, and checker agents
-  - Establish docs, plans, and tickets directories
+  - Create agents directory with planner, checker, backend, and frontend agents
+  - Establish docs, skills, and tickets directories
   - Add README files to all directories
 
 ### [Add your project tasks here]

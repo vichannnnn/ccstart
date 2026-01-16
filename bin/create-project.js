@@ -807,17 +807,15 @@ async function main() {
     'claude': [],
     'agents': [],
     'docs': [],
-    'plans': [],
     'tickets': []
   };
-  
+
   // Store conflict strategies per category
   const conflictStrategies = {
     'CLAUDE.md': 'skip',
     'claude': 'skip',
     'agents': 'skip',
     'docs': 'skip',
-    'plans': 'skip',
     'tickets': 'skip'
   };
 
@@ -898,7 +896,7 @@ async function main() {
           }
           
           // Process claude subdirectories (except agents which we handle specially)
-          const claudeSubdirs = ['docs', 'plans', 'tickets'];
+          const claudeSubdirs = ['docs', 'skills', 'tickets'];
           claudeSubdirs.forEach(subdir => {
             const subdirSrc = path.join(src, subdir);
             const subdirDest = path.join(dest, subdir);
@@ -1033,8 +1031,8 @@ async function main() {
             conflictsByCategory['agents'].push(relativePath);
           } else if (relativePath.startsWith('claude/docs/')) {
             conflictsByCategory['docs'].push(relativePath);
-          } else if (relativePath.startsWith('claude/plans/')) {
-            conflictsByCategory['plans'].push(relativePath);
+          } else if (relativePath.startsWith('claude/skills/')) {
+            conflictsByCategory['docs'].push(relativePath);
           } else if (relativePath.startsWith('claude/tickets/')) {
             conflictsByCategory['tickets'].push(relativePath);
           }
@@ -1073,7 +1071,6 @@ async function main() {
           { key: 'claude', name: 'Claude Directory', emoji: '📁' },
           { key: 'agents', name: 'Agents', emoji: '🤖' },
           { key: 'docs', name: 'Documentation', emoji: '📚' },
-          { key: 'plans', name: 'Plans', emoji: '📋' },
           { key: 'tickets', name: 'Tickets', emoji: '🎫' }
         ];
         
@@ -1140,8 +1137,8 @@ async function main() {
               strategy = conflictStrategies['agents'];
             } else if (item.relativePath.startsWith('claude/docs/')) {
               strategy = conflictStrategies['docs'];
-            } else if (item.relativePath.startsWith('claude/plans/')) {
-              strategy = conflictStrategies['plans'];
+            } else if (item.relativePath.startsWith('claude/skills/')) {
+              strategy = conflictStrategies['docs'];
             } else if (item.relativePath.startsWith('claude/tickets/')) {
               strategy = conflictStrategies['tickets'];
             } else {
