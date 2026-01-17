@@ -18,7 +18,8 @@ We already have boilerplate for our codebase to build CRUD and stuff, having one
 like Claude seems like the obvious solution.
 
 ccstart provides a complete, opinionated scaffolding with basic agents, skills, and workflows out of the box so that we
-can focus on immediately prompting and building.
+can focus on immediately prompting and building while trying to keep context bloat and overengineering as low as 
+possible.
 
 ## Quick Start Installation
 
