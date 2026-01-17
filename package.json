@@ -1,6 +1,6 @@
 {
   "name": "ccstart",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Start your Claude Code projects with a well-organized structure including agents, tickets, and skills",
   "bin": {
     "ccstart": "bin/create-project.js"
