@@ -797,7 +797,7 @@ function getAvailableSkills() {
 
 // Function to get available hooks
 function getAvailableHooks() {
-  const hooksDir = path.join(templateDir, 'hooks');
+  const hooksDir = path.join(templateDir, 'claude', 'hooks');
   const hooks = [];
 
   try {
@@ -1616,9 +1616,8 @@ async function main() {
         console.log('  claude init    # Initialize Claude Code in the project');
       }
     }
-    console.log('  1. Edit CLAUDE.md to add your project-specific instructions');
-    console.log('  2. Update ROADMAP.md with your project goals');
-    console.log('  3. Start creating tickets in the claude/tickets/ directory');
+    console.log('  1. Use /update-claude-md to update your CLAUDE.md with your repository\'s information');
+    console.log('  2. Use /create-ticket to start creating tickets');
     
     if (renamedCount > 0) {
       console.log('\n💡 Tip: Review the -ccstart files to see template examples');

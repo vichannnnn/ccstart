@@ -39,7 +39,7 @@ Output a contract summary:
 
 ### Phase 2: UI Design
 
-After contract agreement, draft the UI layout in `claude/docs/UI_LAYOUT.md`.
+After contract agreement, draft the UI layout (to be included in the ticket).
 
 Include:
 
@@ -106,6 +106,6 @@ UI Layout template:
 1. User describes feature idea
 2. Ask clarifying questions (no assumptions)
 3. Draft and agree on contract
-4. Draft UI layout in `claude/docs/UI_LAYOUT.md`
+4. Draft UI layout
 5. Review UI together, adjust as needed
-6. Only after agreement, proceed to implementation
+6. Only after agreement, proceed to creation of ticket (include UI layout in the ticket)

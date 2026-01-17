@@ -68,6 +68,7 @@ Skills extend Claude's capabilities with specialized workflows. Available skills
 - **/design-feature** - Guide feature development through requirements and design phases
 
 **Utilities:**
+- **/create-script** - Codify processes into standalone Python scripts with CLI interfaces
 - **/skill-creator** - Guide for creating new skills
 - **/update-claude-md** - Update CLAUDE.md sections through interactive Q&A
 

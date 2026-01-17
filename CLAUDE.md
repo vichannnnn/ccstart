@@ -145,6 +145,7 @@ ccstart includes pre-configured skills in the template that users get when they 
 
 - **/commit** - Generate and execute git commits following conventional commit format
 - **/create-pr** - Create GitHub pull requests with structured descriptions
+- **/create-script** - Codify processes into standalone Python scripts with CLI interfaces
 - **/create-ticket** - Create task tickets with proper numbering and update ticket-list.md
 - **/design-feature** - Guide feature development through requirements and design phases
 - **/skill-creator** - Guide for creating new skills
