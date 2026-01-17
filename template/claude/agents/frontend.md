@@ -1,6 +1,6 @@
 ---
 name: frontend
-description: React and TypeScript frontend specialist. Use for UI components, state management, data fetching, and client-side logic. Invoke when building or modifying frontend features.
+description: Frontend architecture and UI design specialist. Use for UI components, state management, data fetching, and client-side logic. Invoke when building or modifying frontend features.
 ---
 
 # Frontend Agent

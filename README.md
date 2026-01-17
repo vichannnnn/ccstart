@@ -5,20 +5,20 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm downloads](https://img.shields.io/npm/dm/ccstart.svg)](https://www.npmjs.com/package/ccstart)
 
-Quick setup for Claude Code projects with built-in agents, skills, tickets, and orchestration workflows.
+Quick setup for Claude Code projects with built-in agents, skills, and tickets.
 
 ## Installation
 
 ```bash
-# Create a new project
-npx ccstart my-project
+# To set up in a specific directory
+npx ccstart <project directory>
 
 # Setup in current directory
 npx ccstart .
 
 # Install globally (optional)
 npm install -g ccstart
-ccstart my-project
+ccstart <project directory>
 ```
 
 ## What You Get
@@ -27,13 +27,11 @@ ccstart my-project
 my-project/
 ├── CLAUDE.md                 # Project instructions for Claude
 ├── claude/
-│   ├── agents/               # 4 specialized agents
-│   ├── docs/                 # ROADMAP.md + agent-orchestration.md
-│   ├── skills/               # Workflow automation (commit, create-pr, etc.)
 │   └── tickets/              # Task tracking system
 └── .claude/
     ├── agents/               # Agents for Claude Code integration
-    └── skills/               # Skills for Claude Code integration
+    ├── skills/               # Skills for Claude Code integration
+    └── hooks/                # Hooks for Claude Code integration
 ```
 
 ## The Workflow
@@ -44,28 +42,16 @@ my-project/
 2. **Agents** handle specialized tasks:
    - `planner` - Strategic planning and task breakdown
    - `checker` - Quality assurance and code review
-   - `backend` - FastAPI/Python backend development
-   - `frontend` - React/TypeScript frontend development
+   - `backend` - Backend architecture and API design
+   - `frontend` - Frontend architecture and UI design
 3. **Skills** automate common workflows:
    - `/commit` - Conventional commits
    - `/create-pr` - Structured pull requests
    - `/create-ticket` - Task ticket creation
    - `/design-feature` - Feature design phases
+   - `/skill-creator` - Create new skills
+   - `/update-claude-md` - Update CLAUDE.md sections
 4. **Tickets** track tasks with status emojis
-
-### Agent Orchestration Workflows
-
-Pre-configured workflows that coordinate agents:
-
-| Workflow | Flow |
-|----------|------|
-| Feature Development | Planner → Backend/Frontend → Checker |
-| Bug Fix | Planner → Backend/Frontend → Checker |
-| API Development | Planner → Backend → Frontend → Checker |
-| UI Components | Planner → Frontend → Checker |
-| Quality Assurance | Planner → Checker → Fix → Checker |
-
-See `claude/docs/agent-orchestration.md` for detailed workflow documentation.
 
 ## Command Line Options
 
@@ -86,10 +72,47 @@ Examples:
   ccstart --agents             # Preview available agents
 ```
 
+## Interactive Setup
+
+When you run `ccstart`, you'll be guided through three selection prompts:
+
+### Agent Selection
+
+```
+? Choose your agents: (Press <space> to select, <a> to toggle all)
+❯◯ planner
+     Strategic planning and task breakdown specialist
+ ◯ checker
+     Quality assurance and code review specialist
+ ◯ backend
+     Backend architecture and API design specialist
+ ◯ frontend
+     Frontend architecture and UI design specialist
+```
+
+### Skill Selection
+
+```
+? Choose your skills: (Press <space> to select, <a> to toggle all)
+❯◯ commit
+     Generate and execute git commits following conventional commit format
+ ◯ create-pr
+     Create GitHub pull requests with properly structured descriptions
+ ◯ create-ticket
+     Create task tickets with proper numbering and update ticket-list.md
+ ◯ design-feature
+     Guide feature development through requirements and design phases
+ ◯ skill-creator
+     Guide for creating new skills
+ ◯ update-claude-md
+     Update CLAUDE.md sections through interactive Q&A
+```
+
+Use `--all-agents` to skip agent selection and include all agents.
+
 ## Key Features
 
-- **Interactive Agent Selection** - Choose which agents to include during setup
-- **Agent Orchestration Workflows** - Pre-defined workflows that coordinate multiple agents
+- **Interactive Agent & Skill Selection** - Choose which agents and skills to include during setup
 - **Smart Conflict Resolution** - Handle existing files with skip/rename/overwrite options
 - **Auto-detects Claude Code** - Creates .claude directory structure automatically
 - **Dry Run Mode** - Preview changes before applying them
@@ -122,7 +145,7 @@ npm unlink -g ccstart
 
 ## Credits
 
-Born from our discussions in TechOverflow with [vichannnnn](https://github.com/vichannnnn), [MrMarciaOng](https://github.com/MrMarciaOng), and [nasdin](https://github.com/nasdin)
+Born from our discussions in TechOverflow with [vichannnnn](https://github.com/vichannnnn) and [MrMarciaOng](https://github.com/MrMarciaOng).
 
 ## License
 

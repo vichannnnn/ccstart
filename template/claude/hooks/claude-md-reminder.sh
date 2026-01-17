@@ -1,0 +1,15 @@
+#!/bin/bash
+: <<'FRONTMATTER'
+---
+name: claude-md-reminder
+description: Reminds Claude to respect CLAUDE.md and ask clarifying questions on every prompt
+---
+FRONTMATTER
+
+cat << 'EOF'
+<user-prompt-submit-hook>
+REMINDER: Before responding to this prompt:
+1. Review and respect all instructions in CLAUDE.md
+2. Ask clarifying questions if any requirements are unclear - do not make assumptions
+</user-prompt-submit-hook>
+EOF

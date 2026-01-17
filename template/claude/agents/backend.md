@@ -1,6 +1,6 @@
 ---
 name: backend
-description: FastAPI and Python backend specialist. Use for API endpoints, database models, authentication, and service logic. Invoke when building or modifying backend infrastructure.
+description: Backend architecture and API design specialist. Use for API endpoints, database models, authentication, and service logic. Invoke when building or modifying backend infrastructure.
 ---
 
 # Backend Agent

@@ -12,7 +12,11 @@ const flags = {
   help: false,
   allAgents: false,
   noAgents: false,
-  agents: false
+  agents: false,
+  allSkills: false,
+  noSkills: false,
+  allHooks: false,
+  noHooks: false
 };
 
 let projectName = '.';
@@ -32,6 +36,14 @@ for (let i = 0; i < args.length; i++) {
     flags.noAgents = true;
   } else if (arg === '--agents') {
     flags.agents = true;
+  } else if (arg === '--all-skills') {
+    flags.allSkills = true;
+  } else if (arg === '--no-skills') {
+    flags.noSkills = true;
+  } else if (arg === '--all-hooks') {
+    flags.allHooks = true;
+  } else if (arg === '--no-hooks') {
+    flags.noHooks = true;
   } else if (!arg.startsWith('-')) {
     projectName = arg;
   }
@@ -48,6 +60,10 @@ Options:
   --agents        Interactive agent selection mode
   --all-agents    Include all agents without prompting
   --no-agents     Skip agent selection entirely
+  --all-skills    Include all skills without prompting
+  --no-skills     Skip skill selection entirely
+  --all-hooks     Include all hooks without prompting
+  --no-hooks      Skip hook selection entirely
   --help, -h      Show this help message
 
 Examples:
@@ -57,6 +73,7 @@ Examples:
   ccstart my-app --dry-run   # Preview changes without creating files
   ccstart --agents           # Interactive agent selection only
   ccstart my-app --all-agents # Include all agents automatically
+  ccstart my-app --all-skills # Include all skills automatically
 `);
   process.exit(0);
 }
@@ -80,6 +97,16 @@ function validateProjectName(name) {
 // Validate conflicting flags
 if (flags.allAgents && flags.noAgents) {
   console.error('Error: Cannot use --all-agents and --no-agents together');
+  process.exit(1);
+}
+
+if (flags.allSkills && flags.noSkills) {
+  console.error('Error: Cannot use --all-skills and --no-skills together');
+  process.exit(1);
+}
+
+if (flags.allHooks && flags.noHooks) {
+  console.error('Error: Cannot use --all-hooks and --no-hooks together');
   process.exit(1);
 }
 
@@ -160,9 +187,10 @@ function checkClaudeCode() {
 }
 
 // Function to initialize .claude directory structure
-async function initializeClaudeDirectory(selectedAgentFiles, conflictStrategy, dryRun) {
+async function initializeClaudeDirectory(selectedAgentFiles, selectedSkillDirs, selectedHookFiles, conflictStrategy, dryRun) {
   const claudeDir = path.join(targetDir, '.claude');
   const claudeAgentsDir = path.join(claudeDir, 'agents');
+  const claudeSkillsDir = path.join(claudeDir, 'skills');
   const templateClaudeDir = path.join(templateDir, '.claude');
   
   const createdItems = [];
@@ -368,7 +396,106 @@ async function initializeClaudeDirectory(selectedAgentFiles, conflictStrategy, d
         }
       }
     }
-    
+
+    // Create .claude/skills directory
+    if (!fs.existsSync(claudeSkillsDir)) {
+      if (!dryRun) {
+        fs.mkdirSync(claudeSkillsDir, { recursive: true });
+      }
+      createdItems.push('.claude/skills/');
+      if (dryRun) {
+        console.log('  📁 Would create directory: .claude/skills/');
+      }
+    } else {
+      skippedItems.push('.claude/skills/');
+    }
+
+    // Copy selected skills to .claude/skills (copy entire directories)
+    const templateSkillsDir = path.join(templateDir, 'claude', 'skills');
+    let copiedSkills = 0;
+    let skippedSkillsCount = 0;
+
+    function copyDirRecursive(src, dest) {
+      if (!fs.existsSync(dest)) {
+        fs.mkdirSync(dest, { recursive: true });
+      }
+      const entries = fs.readdirSync(src, { withFileTypes: true });
+      for (const entry of entries) {
+        const srcPath = path.join(src, entry.name);
+        const destPath = path.join(dest, entry.name);
+        if (entry.isDirectory()) {
+          copyDirRecursive(srcPath, destPath);
+        } else {
+          fs.copyFileSync(srcPath, destPath);
+        }
+      }
+    }
+
+    for (const skillDir of selectedSkillDirs) {
+      if (!validateSkillDir(skillDir)) {
+        console.warn(`⚠️  Skipping invalid skill directory: ${skillDir}`);
+        continue;
+      }
+
+      const safeSkillDir = path.basename(skillDir);
+      const skillSrc = path.join(templateSkillsDir, safeSkillDir);
+      const skillDest = path.join(claudeSkillsDir, safeSkillDir);
+
+      const normalizedSkillSrc = path.normalize(skillSrc);
+      const normalizedTemplateSkillsDir = path.normalize(templateSkillsDir);
+      if (!normalizedSkillSrc.startsWith(normalizedTemplateSkillsDir)) {
+        console.warn(`⚠️  Skipping skill directory outside template directory: ${skillDir}`);
+        continue;
+      }
+
+      if (fs.existsSync(skillSrc) && fs.statSync(skillSrc).isDirectory()) {
+        if (!fs.existsSync(skillDest)) {
+          if (!dryRun) {
+            copyDirRecursive(skillSrc, skillDest);
+          }
+          copiedSkills++;
+          createdItems.push(`.claude/skills/${safeSkillDir}/`);
+          if (dryRun) {
+            console.log(`  ✨ Would copy: .claude/skills/${safeSkillDir}/`);
+          }
+        } else {
+          if (conflictStrategy === 'overwrite') {
+            if (!dryRun) {
+              copyDirRecursive(skillSrc, skillDest);
+            }
+            copiedSkills++;
+            if (dryRun) {
+              console.log(`  ♻️  Would replace: .claude/skills/${safeSkillDir}/`);
+            }
+          } else if (conflictStrategy === 'rename') {
+            let newDest = path.join(claudeSkillsDir, `${safeSkillDir}-ccstart`);
+            let counter = 1;
+            while (fs.existsSync(newDest)) {
+              newDest = path.join(claudeSkillsDir, `${safeSkillDir}-ccstart-${counter}`);
+              counter++;
+            }
+            if (!dryRun) {
+              copyDirRecursive(skillSrc, newDest);
+            }
+            copiedSkills++;
+            const relativePath = path.relative(claudeDir, newDest);
+            createdItems.push(`${relativePath}/`);
+            if (dryRun) {
+              console.log(`  📄 Would create: ${relativePath}/`);
+            } else {
+              console.log(`  📄 Created: ${relativePath}/`);
+            }
+          } else {
+            skippedSkillsCount++;
+            skippedItems.push(`.claude/skills/${safeSkillDir}/`);
+            if (dryRun) {
+              console.log(`  ⏭️  Would skip: .claude/skills/${safeSkillDir}/`);
+            }
+          }
+        }
+      }
+    }
+
     // Copy .claude/commands directory
     const claudeCommandsDir = path.join(claudeDir, 'commands');
     const templateCommandsDir = path.join(templateDir, '.claude', 'commands');
@@ -438,7 +565,7 @@ async function initializeClaudeDirectory(selectedAgentFiles, conflictStrategy, d
     
     // Copy .claude/hooks directory
     const claudeHooksDir = path.join(claudeDir, 'hooks');
-    const templateHooksDir = path.join(templateDir, '.claude', 'hooks');
+    const templateHooksDir = path.join(templateDir, 'hooks');
     
     if (fs.existsSync(templateHooksDir)) {
       // Create .claude/hooks directory
@@ -514,7 +641,7 @@ async function initializeClaudeDirectory(selectedAgentFiles, conflictStrategy, d
     }
     
     // Copy settings.json.example if it doesn't exist
-    const settingsExampleSrc = path.join(templateDir, '.claude', 'settings.json.example');
+    const settingsExampleSrc = path.join(templateDir, 'settings.json.example');
     const settingsExampleDest = path.join(claudeDir, 'settings.json.example');
     
     if (fs.existsSync(settingsExampleSrc) && !fs.existsSync(settingsExampleDest)) {
@@ -543,7 +670,9 @@ async function initializeClaudeDirectory(selectedAgentFiles, conflictStrategy, d
       createdItems,
       skippedItems,
       copiedAgents,
-      skippedAgents
+      skippedAgents,
+      copiedSkills,
+      skippedSkillsCount
     };
     
   } catch (error) {
@@ -556,16 +685,27 @@ function parseAgentFrontmatter(filePath) {
   try {
     const content = fs.readFileSync(filePath, 'utf8');
     const lines = content.split('\n');
-    
-    if (lines[0] !== '---') {
+
+    // Find the start of frontmatter (---) within the first 5 lines
+    // This handles: markdown files, shell scripts with shebang, heredoc wrappers
+    let startIndex = -1;
+    const maxSearchLines = Math.min(5, lines.length);
+    for (let i = 0; i < maxSearchLines; i++) {
+      if (lines[i] === '---') {
+        startIndex = i;
+        break;
+      }
+    }
+
+    if (startIndex === -1) {
       return null;
     }
-    
+
     let name = '';
     let description = '';
     let inFrontmatter = true;
-    let lineIndex = 1;
-    
+    let lineIndex = startIndex + 1;
+
     while (lineIndex < lines.length && inFrontmatter) {
       const line = lines[lineIndex];
       if (line === '---') {
@@ -577,7 +717,7 @@ function parseAgentFrontmatter(filePath) {
       }
       lineIndex++;
     }
-    
+
     return { name, description };
   } catch (error) {
     return null;
@@ -609,6 +749,81 @@ function getAvailableAgents() {
   }
   
   return agents.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+// Function to validate skill directories for security
+function validateSkillDir(dir) {
+  const basename = path.basename(dir);
+  if (dir !== basename) {
+    return false;
+  }
+  if (dir.includes('..') || dir.includes('./') || dir.includes('\\')) {
+    return false;
+  }
+  return true;
+}
+
+// Function to get available skills
+function getAvailableSkills() {
+  const skillsDir = path.join(templateDir, 'claude', 'skills');
+  const skills = [];
+
+  try {
+    const dirs = fs.readdirSync(skillsDir);
+    for (const dir of dirs) {
+      const skillDirPath = path.join(skillsDir, dir);
+      if (fs.statSync(skillDirPath).isDirectory()) {
+        const skillFiles = fs.readdirSync(skillDirPath);
+        const skillMdFile = skillFiles.find(f => f.toLowerCase() === 'skill.md');
+        if (skillMdFile) {
+          const filePath = path.join(skillDirPath, skillMdFile);
+          const metadata = parseAgentFrontmatter(filePath);
+          if (metadata && metadata.name) {
+            skills.push({
+              dir,
+              name: metadata.name,
+              description: metadata.description || 'No description available'
+            });
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Warning: Could not read skills directory:', error.message);
+  }
+
+  return skills.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+// Function to get available hooks
+function getAvailableHooks() {
+  const hooksDir = path.join(templateDir, 'hooks');
+  const hooks = [];
+
+  try {
+    if (!fs.existsSync(hooksDir)) {
+      return hooks;
+    }
+    const files = fs.readdirSync(hooksDir);
+    for (const file of files) {
+      if (file === 'README.md' || file.startsWith('.')) {
+        continue;
+      }
+      const filePath = path.join(hooksDir, file);
+      if (fs.statSync(filePath).isFile()) {
+        const metadata = parseAgentFrontmatter(filePath);
+        hooks.push({
+          file,
+          name: metadata && metadata.name ? metadata.name : file.replace(/\.[^.]+$/, ''),
+          description: metadata && metadata.description ? metadata.description : 'No description available'
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Warning: Could not read hooks directory:', error.message);
+  }
+
+  return hooks.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 // Dynamic import for ESM module
@@ -645,17 +860,21 @@ async function selectAgents(availableAgents) {
   }));
   
   console.log('\n🤖 Select agents to include in your Claude Code project\n');
-  console.log(`${colors.dim}Use arrow keys to navigate, space to select/deselect, 'a' to toggle all${colors.reset}\n`);
-  
+  console.log(`${colors.dim}Agents run in separate context windows with their own conversation history,${colors.reset}`);
+  console.log(`${colors.dim}ideal for specialized tasks that don't need your main session context.${colors.reset}\n`);
+  console.log(`${colors.dim}Use arrow keys to navigate, space to select, <a> to toggle all${colors.reset}\n`);
+
   const selectedFiles = await checkbox({
     message: `${colors.bold}Choose your agents:${colors.reset}`,
     choices,
     pageSize: 10,
     loop: false
   });
-  
+
+  const filesToProcess = selectedFiles;
+
   // Validate selected files to prevent path traversal
-  const validatedFiles = selectedFiles.filter(file => {
+  const validatedFiles = filesToProcess.filter(file => {
     // Use centralized validation function
     if (!validateAgentFile(file)) {
       console.warn(`⚠️  Skipping invalid agent file: ${file}`);
@@ -668,7 +887,101 @@ async function selectAgents(availableAgents) {
     }
     return true;
   });
-  
+
+  return validatedFiles;
+}
+
+async function selectSkills(availableSkills) {
+  const checkbox = await importCheckbox();
+
+  const colors = {
+    cyan: '\x1b[36m',
+    yellow: '\x1b[33m',
+    green: '\x1b[32m',
+    blue: '\x1b[34m',
+    magenta: '\x1b[35m',
+    bold: '\x1b[1m',
+    dim: '\x1b[2m',
+    reset: '\x1b[0m'
+  };
+
+  const choices = availableSkills.map(skill => ({
+    name: `${colors.magenta}${colors.bold}${skill.name}${colors.reset}\n     ${colors.dim}${skill.description}${colors.reset}`,
+    value: skill.dir,
+    checked: false
+  }));
+
+  console.log('\n⚡ Select skills to include in your Claude Code project\n');
+  console.log(`${colors.dim}Think of skills as macros - best suited for repetitive actions like${colors.reset}`);
+  console.log(`${colors.dim}committing code, creating PRs, or generating tickets.${colors.reset}\n`);
+  console.log(`${colors.dim}Use arrow keys to navigate, space to select, <a> to toggle all${colors.reset}\n`);
+
+  const selectedDirs = await checkbox({
+    message: `${colors.bold}Choose your skills:${colors.reset}`,
+    choices,
+    pageSize: 10,
+    loop: false
+  });
+
+  const dirsToProcess = selectedDirs;
+
+  const validatedDirs = dirsToProcess.filter(dir => {
+    if (!validateSkillDir(dir)) {
+      console.warn(`⚠️  Skipping invalid skill directory: ${dir}`);
+      return false;
+    }
+    if (!availableSkills.some(skill => skill.dir === dir)) {
+      console.warn(`⚠️  Skipping unknown skill directory: ${dir}`);
+      return false;
+    }
+    return true;
+  });
+
+  return validatedDirs;
+}
+
+async function selectHooks(availableHooks) {
+  const checkbox = await importCheckbox();
+
+  const colors = {
+    cyan: '\x1b[36m',
+    yellow: '\x1b[33m',
+    green: '\x1b[32m',
+    blue: '\x1b[34m',
+    magenta: '\x1b[35m',
+    bold: '\x1b[1m',
+    dim: '\x1b[2m',
+    reset: '\x1b[0m'
+  };
+
+  const choices = availableHooks.map(hook => ({
+    name: `${colors.yellow}${colors.bold}${hook.name}${colors.reset}\n     ${colors.dim}${hook.description}${colors.reset}`,
+    value: hook.file,
+    checked: false
+  }));
+
+  console.log('\n🪝 Select hooks to include in your Claude Code project\n');
+  console.log(`${colors.dim}Hooks are shell scripts that run automatically before or after${colors.reset}`);
+  console.log(`${colors.dim}Claude Code actions, enabling custom validation and workflows.${colors.reset}\n`);
+  console.log(`${colors.dim}Use arrow keys to navigate, space to select, <a> to toggle all${colors.reset}\n`);
+
+  const selectedFiles = await checkbox({
+    message: `${colors.bold}Choose your hooks:${colors.reset}`,
+    choices,
+    pageSize: 10,
+    loop: false
+  });
+
+  const filesToProcess = selectedFiles;
+
+  const validatedFiles = filesToProcess.filter(file => {
+    if (!availableHooks.some(hook => hook.file === file)) {
+      console.warn(`⚠️  Skipping unknown hook file: ${file}`);
+      return false;
+    }
+    return true;
+  });
+
   return validatedFiles;
 }
 
@@ -831,28 +1144,80 @@ async function main() {
   } else if (flags.allAgents) {
     selectedAgentFiles = availableAgents.map(a => a.file).filter(validateAgentFile);
     console.log(`\n✅ Including all ${selectedAgentFiles.length} agents (--all-agents flag)`);
-  } else if (!flags.dryRun) {
-    // Close readline interface before using inquirer
+  } else {
     if (rl) {
       rl.close();
       rl = null;
     }
-    
-    // Interactive selection
+
     selectedAgentFiles = await selectAgents(availableAgents);
     console.log(`\n✅ Selected ${selectedAgentFiles.length} agent${selectedAgentFiles.length === 1 ? '' : 's'}`);
-    
-    // Recreate readline interface after agent selection
+
     if (!flags.force && !flags.dryRun) {
       rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
       });
     }
+  }
+
+  // Get available skills for selection
+  const availableSkills = getAvailableSkills();
+  let selectedSkillDirs = [];
+
+  // Determine which skills to include
+  if (flags.noSkills) {
+    selectedSkillDirs = [];
+    console.log('⏭️  Skipping skill selection (--no-skills flag)');
+  } else if (flags.allSkills) {
+    selectedSkillDirs = availableSkills.map(s => s.dir).filter(validateSkillDir);
+    console.log(`✅ Including all ${selectedSkillDirs.length} skills (--all-skills flag)`);
   } else {
-    // In dry-run mode, show what would happen
-    console.log(`\nWould prompt for agent selection from ${availableAgents.length} available agents`);
-    selectedAgentFiles = availableAgents.map(a => a.file).filter(validateAgentFile); // Include all for scanning purposes
+    if (rl) {
+      rl.close();
+      rl = null;
+    }
+
+    selectedSkillDirs = await selectSkills(availableSkills);
+    console.log(`\n✅ Selected ${selectedSkillDirs.length} skill${selectedSkillDirs.length === 1 ? '' : 's'}`);
+
+    if (!flags.force && !flags.dryRun) {
+      rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+    }
+  }
+
+  // Get available hooks for selection
+  const availableHooks = getAvailableHooks();
+  let selectedHookFiles = [];
+
+  // Determine which hooks to include
+  if (flags.noHooks) {
+    selectedHookFiles = [];
+    console.log('⏭️  Skipping hook selection (--no-hooks flag)');
+  } else if (flags.allHooks) {
+    selectedHookFiles = availableHooks.map(h => h.file);
+    console.log(`✅ Including all ${selectedHookFiles.length} hooks (--all-hooks flag)`);
+  } else if (availableHooks.length === 0) {
+    console.log('\n📝 No hooks available yet');
+    selectedHookFiles = [];
+  } else {
+    if (rl) {
+      rl.close();
+      rl = null;
+    }
+
+    selectedHookFiles = await selectHooks(availableHooks);
+    console.log(`\n✅ Selected ${selectedHookFiles.length} hook${selectedHookFiles.length === 1 ? '' : 's'}`);
+
+    if (!flags.force && !flags.dryRun) {
+      rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+    }
   }
 
   function scanTemplate(src, dest, relativePath = '') {
@@ -895,82 +1260,22 @@ async function main() {
             conflictsByCategory['claude'].push(relativePath);
           }
           
-          // Process claude subdirectories (except agents which we handle specially)
-          const claudeSubdirs = ['docs', 'skills', 'tickets'];
+          // Process claude subdirectories - only tickets now (agents and skills go to .claude/)
+          const claudeSubdirs = ['tickets'];
           claudeSubdirs.forEach(subdir => {
             const subdirSrc = path.join(src, subdir);
             const subdirDest = path.join(dest, subdir);
             const subdirRelPath = path.join(relativePath, subdir);
-            
+
             if (fs.existsSync(subdirSrc)) {
               scanTemplate(subdirSrc, subdirDest, subdirRelPath);
             }
           });
-          
-          // Handle agents directory specially with selected agents
-          const agentsSrc = path.join(src, 'agents');
-          const agentsDest = path.join(dest, 'agents');
-          const agentsRelPath = path.join(relativePath, 'agents');
-          
-          allItems.push({ 
-            src: agentsSrc, 
-            dest: agentsDest, 
-            type: 'directory',
-            relativePath: agentsRelPath,
-            exists: fs.existsSync(agentsDest) 
-          });
-          
-          if (fs.existsSync(agentsDest)) {
-            dirConflicts.push(agentsRelPath);
-          }
-          
-          // Add selected agent files
-          for (const agentFile of selectedAgentFiles) {
-            if (!validateAgentFile(agentFile)) {
-              console.warn(`⚠️  Skipping invalid agent file: ${agentFile}`);
-              continue;
-            }
-            
-            const safeAgentFile = path.basename(agentFile);
-            const agentSrc = path.join(agentsSrc, safeAgentFile);
-            const agentDest = path.join(agentsDest, safeAgentFile);
-            const agentRelPath = path.join(agentsRelPath, safeAgentFile);
-            
-            if (fs.existsSync(agentSrc)) {
-              allItems.push({
-                src: agentSrc,
-                dest: agentDest,
-                type: 'file',
-                relativePath: agentRelPath,
-                exists: fs.existsSync(agentDest)
-              });
-              
-              if (fs.existsSync(agentDest)) {
-                fileConflicts.push(agentRelPath);
-                conflictsByCategory['agents'].push(agentRelPath);
-              }
-            }
-          }
-          
-          // Always include agents README.md
-          const agentsReadmeSrc = path.join(agentsSrc, 'README.md');
-          const agentsReadmeDest = path.join(agentsDest, 'README.md');
-          if (fs.existsSync(agentsReadmeSrc)) {
-            allItems.push({
-              src: agentsReadmeSrc,
-              dest: agentsReadmeDest,
-              type: 'file',
-              relativePath: path.join(agentsRelPath, 'README.md'),
-              exists: fs.existsSync(agentsReadmeDest)
-            });
-            
-            if (fs.existsSync(agentsReadmeDest)) {
-              const readmePath = path.join(agentsRelPath, 'README.md');
-              fileConflicts.push(readmePath);
-              conflictsByCategory['agents'].push(readmePath);
-            }
-          }
-          
+
+          // Note: skills are now only copied to .claude/skills/ via initializeClaudeDirectory
+
+          // Note: agents are now only copied to .claude/agents/ via initializeClaudeDirectory
+
           // Handle CLAUDE.md from claude directory - it goes to root
           const claudeMdSrc = path.join(src, 'CLAUDE.md');
           const claudeMdDest = path.join(targetDir, 'CLAUDE.md'); // Note: goes to root
@@ -1116,6 +1421,23 @@ async function main() {
   let renamedCount = 0;
   let overwrittenCount = 0;
   
+  // Helper function to copy directories recursively
+  function copyDirRecursiveSync(src, dest) {
+    if (!fs.existsSync(dest)) {
+      fs.mkdirSync(dest, { recursive: true });
+    }
+    const entries = fs.readdirSync(src, { withFileTypes: true });
+    for (const entry of entries) {
+      const srcPath = path.join(src, entry.name);
+      const destPath = path.join(dest, entry.name);
+      if (entry.isDirectory()) {
+        copyDirRecursiveSync(srcPath, destPath);
+      } else {
+        fs.copyFileSync(srcPath, destPath);
+      }
+    }
+  }
+
   for (const item of allItems) {
     try {
       if (item.type === 'directory') {
@@ -1125,6 +1447,47 @@ async function main() {
           } else {
             console.log(`  📁 Would create directory: ${item.relativePath || '.'}/`);
           }
+        }
+      } else if (item.type === 'skill-directory') {
+        // Handle skill directory (copy entire directory)
+        let strategy = 'skip';
+        if (item.relativePath.startsWith('claude/skills/')) {
+          strategy = conflictStrategies['docs'];
+        }
+
+        if (item.exists) {
+          if (strategy === 'skip') {
+            skippedCount++;
+            if (flags.dryRun) {
+              console.log(`  ⏭️  Would skip: ${item.relativePath}/`);
+            }
+            continue;
+          } else if (strategy === 'rename') {
+            let newDest = `${item.dest}-ccstart`;
+            let counter = 1;
+            while (fs.existsSync(newDest)) {
+              newDest = `${item.dest}-ccstart-${counter}`;
+              counter++;
+            }
+            if (!flags.dryRun) {
+              copyDirRecursiveSync(item.src, newDest);
+            }
+            renamedCount++;
+            console.log(`  📄 ${flags.dryRun ? 'Would create' : 'Created'}: ${path.relative(targetDir, newDest)}/`);
+          } else if (strategy === 'overwrite') {
+            if (!flags.dryRun) {
+              copyDirRecursiveSync(item.src, item.dest);
+            }
+            overwrittenCount++;
+            console.log(`  ♻️  ${flags.dryRun ? 'Would replace' : 'Replaced'}: ${item.relativePath}/`);
+          }
+        } else {
+          if (!flags.dryRun) {
+            copyDirRecursiveSync(item.src, item.dest);
+          } else {
+            console.log(`  ✨ Would copy: ${item.relativePath}/`);
+          }
+          copiedCount++;
         }
       } else {
         if (item.exists) {
@@ -1200,12 +1563,12 @@ async function main() {
     }
   }
 
-  // Initialize .claude directory and copy agents
+  // Initialize .claude directory and copy agents, skills, hooks
   let claudeInitResult = null;
   // Always initialize .claude directory structure (it will handle existing directories)
   console.log(`\n🔧 ${claudeStatus.hasClaudeDir ? 'Updating' : 'Initializing'} .claude directory structure...`);
-  claudeInitResult = await initializeClaudeDirectory(selectedAgentFiles, conflictStrategies['agents'], flags.dryRun);
-  
+  claudeInitResult = await initializeClaudeDirectory(selectedAgentFiles, selectedSkillDirs, selectedHookFiles, conflictStrategies['agents'], flags.dryRun);
+
   if (claudeInitResult.createdItems.length > 0) {
     console.log(`  ✅ Created ${claudeInitResult.createdItems.length} items in .claude directory`);
   }
@@ -1215,18 +1578,27 @@ async function main() {
   if (claudeInitResult.skippedAgents > 0) {
     console.log(`  ⏭️  Skipped ${claudeInitResult.skippedAgents} existing agents in .claude/agents`);
   }
+  if (claudeInitResult.copiedSkills > 0) {
+    console.log(`  ⚡ Copied ${claudeInitResult.copiedSkills} skills to .claude/skills`);
+  }
+  if (claudeInitResult.skippedSkillsCount > 0) {
+    console.log(`  ⏭️  Skipped ${claudeInitResult.skippedSkillsCount} existing skills in .claude/skills`);
+  }
 
   console.log(`\n✅ Claude Code project ${flags.dryRun ? 'would be ' : ''}created successfully!`);
   
   // Show summary of what happened
-  if (fileConflicts.length > 0 || copiedCount > 0 || selectedAgentFiles.length > 0 || claudeInitResult) {
+  if (fileConflicts.length > 0 || copiedCount > 0 || selectedAgentFiles.length > 0 || selectedSkillDirs.length > 0 || claudeInitResult) {
     console.log('\n📊 Summary:');
     if (copiedCount > 0) console.log(`  ✨ ${copiedCount} new files ${flags.dryRun ? 'would be ' : ''}copied`);
     if (skippedCount > 0) console.log(`  ⏭️  ${skippedCount} existing files ${flags.dryRun ? 'would be ' : ''}kept unchanged`);
     if (renamedCount > 0) console.log(`  📄 ${renamedCount} template files ${flags.dryRun ? 'would be ' : ''}saved with -ccstart suffix`);
     if (overwrittenCount > 0) console.log(`  ♻️  ${overwrittenCount} files ${flags.dryRun ? 'would be ' : ''}replaced with template versions`);
     if (!flags.noAgents && !flags.dryRun) {
-      console.log(`  🤖 ${selectedAgentFiles.length} agent${selectedAgentFiles.length === 1 ? '' : 's'} ${flags.dryRun ? 'would be ' : ''}included in claude/agents`);
+      console.log(`  🤖 ${selectedAgentFiles.length} agent${selectedAgentFiles.length === 1 ? '' : 's'} ${flags.dryRun ? 'would be ' : ''}included in .claude/agents`);
+    }
+    if (!flags.noSkills && !flags.dryRun) {
+      console.log(`  ⚡ ${selectedSkillDirs.length} skill${selectedSkillDirs.length === 1 ? '' : 's'} ${flags.dryRun ? 'would be ' : ''}included in .claude/skills`);
     }
     if (claudeInitResult && claudeInitResult.createdItems.length > 0) {
       console.log(`  📁 ${claudeInitResult.createdItems.length} items created in .claude directory`);
@@ -1245,7 +1617,7 @@ async function main() {
       }
     }
     console.log('  1. Edit CLAUDE.md to add your project-specific instructions');
-    console.log('  2. Update claude/docs/ROADMAP.md with your project goals');
+    console.log('  2. Update ROADMAP.md with your project goals');
     console.log('  3. Start creating tickets in the claude/tickets/ directory');
     
     if (renamedCount > 0) {

@@ -1,7 +1,7 @@
 {
   "name": "ccstart",
   "version": "2.2.0",
-  "description": "Start your Claude Code projects with a well-organized structure including agents, tickets, skills and orchestration workflows",
+  "description": "Start your Claude Code projects with a well-organized structure including agents, tickets, and skills",
   "bin": {
     "ccstart": "bin/create-project.js"
   },
@@ -16,8 +16,7 @@
   "author": "vichannnnn",
   "contributors": [
     "marcia_ong",
-    "hima7459",
-    "nasdin"
+    "hima7459"
   ],
   "license": "MIT",
   "repository": {
@@ -35,13 +34,5 @@
   },
   "dependencies": {
     "@inquirer/checkbox": "^4.0.4"
-  },
-  "devDependencies": {
-    "jest": "^30.0.5"
-  },
-  "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
   }
 }
