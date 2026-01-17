@@ -565,7 +565,7 @@ async function initializeClaudeDirectory(selectedAgentFiles, selectedSkillDirs, 
     
     // Copy .claude/hooks directory
     const claudeHooksDir = path.join(claudeDir, 'hooks');
-    const templateHooksDir = path.join(templateDir, 'hooks');
+    const templateHooksDir = path.join(templateDir, 'claude', 'hooks');
     
     if (fs.existsSync(templateHooksDir)) {
       // Create .claude/hooks directory
