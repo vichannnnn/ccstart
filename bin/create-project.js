@@ -566,8 +566,9 @@ async function initializeClaudeDirectory(selectedAgentFiles, selectedSkillDirs, 
     // Copy .claude/hooks directory
     const claudeHooksDir = path.join(claudeDir, 'hooks');
     const templateHooksDir = path.join(templateDir, 'claude', 'hooks');
-    
-    if (fs.existsSync(templateHooksDir)) {
+    const copiedHookFiles = [];
+
+    if (fs.existsSync(templateHooksDir) && selectedHookFiles.length > 0) {
       // Create .claude/hooks directory
       if (!fs.existsSync(claudeHooksDir)) {
         if (!dryRun) {
@@ -578,14 +579,13 @@ async function initializeClaudeDirectory(selectedAgentFiles, selectedSkillDirs, 
           console.log('  📁 Would create directory: .claude/hooks/');
         }
       }
-      
-      // Copy all files from template hooks directory
-      const hookFiles = fs.readdirSync(templateHooksDir);
-      for (const hookFile of hookFiles) {
+
+      // Copy only selected hook files
+      for (const hookFile of selectedHookFiles) {
         const hookSrc = path.join(templateHooksDir, hookFile);
         const hookDest = path.join(claudeHooksDir, hookFile);
-        
-        if (fs.statSync(hookSrc).isFile()) {
+
+        if (fs.existsSync(hookSrc) && fs.statSync(hookSrc).isFile()) {
           if (!fs.existsSync(hookDest)) {
             if (!dryRun) {
               fs.copyFileSync(hookSrc, hookDest);
@@ -594,6 +594,7 @@ async function initializeClaudeDirectory(selectedAgentFiles, selectedSkillDirs, 
                 fs.chmodSync(hookDest, '755');
               }
             }
+            copiedHookFiles.push(hookFile);
             createdItems.push(`.claude/hooks/${hookFile}`);
             if (dryRun) {
               console.log(`  ✨ Would copy: .claude/hooks/${hookFile}`);
@@ -606,6 +607,7 @@ async function initializeClaudeDirectory(selectedAgentFiles, selectedSkillDirs, 
                   fs.chmodSync(hookDest, '755');
                 }
               }
+              copiedHookFiles.push(hookFile);
               if (dryRun) {
                 console.log(`  ♻️  Would replace: .claude/hooks/${hookFile}`);
               }
@@ -624,6 +626,8 @@ async function initializeClaudeDirectory(selectedAgentFiles, selectedSkillDirs, 
                   fs.chmodSync(newDest, '755');
                 }
               }
+              const renamedFile = path.basename(newDest);
+              copiedHookFiles.push(renamedFile);
               const relativePath = path.relative(claudeDir, newDest);
               createdItems.push(relativePath);
               if (dryRun) {
@@ -638,6 +642,46 @@ async function initializeClaudeDirectory(selectedAgentFiles, selectedSkillDirs, 
           }
         }
       }
+    }
+
+    // Create settings.local.json with hooks configuration
+    const settingsLocalDest = path.join(claudeDir, 'settings.local.json');
+    if (copiedHookFiles.length > 0) {
+      const hooksConfig = {
+        hooks: {
+          UserPromptSubmit: []
+        }
+      };
+
+      // Add each copied hook to UserPromptSubmit (all current hooks use this event)
+      for (const hookFile of copiedHookFiles) {
+        hooksConfig.hooks.UserPromptSubmit.push({
+          hooks: [{
+            type: "command",
+            command: `.claude/hooks/${hookFile}`
+          }]
+        });
+      }
+
+      // Merge with existing settings.local.json if it exists
+      if (fs.existsSync(settingsLocalDest)) {
+        const existingSettings = JSON.parse(fs.readFileSync(settingsLocalDest, 'utf8'));
+        existingSettings.hooks = hooksConfig.hooks;
+        if (!dryRun) {
+          fs.writeFileSync(settingsLocalDest, JSON.stringify(existingSettings, null, 2));
+        }
+        if (dryRun) {
+          console.log('  ♻️  Would update: .claude/settings.local.json with hooks config');
+        }
+      } else {
+        if (!dryRun) {
+          fs.writeFileSync(settingsLocalDest, JSON.stringify(hooksConfig, null, 2));
+        }
+        if (dryRun) {
+          console.log('  ✨ Would create: .claude/settings.local.json with hooks config');
+        }
+      }
+      createdItems.push('.claude/settings.local.json');
     }
     
     // Copy settings.json.example if it doesn't exist
